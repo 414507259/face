@@ -3,8 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="
-http://www.springframework.org/schema/beans
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
 http://www.springframework.org/schema/beans/spring-beans.xsd
 http://www.springframework.org/schema/tx
 http://www.springframework.org/schema/tx/spring-tx.xsd
@@ -13,7 +13,8 @@ http://www.springframework.org/schema/aop/spring-aop.xsd
 http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="com.tap2up.service"></context:component-scan>
+    <context:component-scan base-package="com.tap2up.service"/>
+
     <!-- 配置数据源
     Druid是Java语言中最好的数据库连接池。Druid能够提供强大的监控和扩展功能。?useAffectedRows=true
     -->
@@ -72,7 +73,7 @@ http://www.springframework.org/schema/context/spring-context.xsd">
         <!--configLocation属性指定mybatis的核心配置文件-->
         <property name="configLocation" value="classpath:mybatis.xml" />
         <!-- 自动扫描entity目录, 省掉Configuration.xml里的手工配置 -->
-<!--        <property name="mapperLocations" value="classpath:mapper" />-->
+<!--        <property name="mapperLocations" value="classpath:mapper/UserMapper.xml" />-->
     </bean>
     <!--
     Mybatis MapperScannerConfigurer 自动扫描 将Mapper接口生成代理注入到Spring
@@ -96,7 +97,7 @@ http://www.springframework.org/schema/context/spring-context.xsd">
     </bean>
 
     <!-- 注解方式配置事物 -->
-    <!-- <tx:annotation-driven transaction-manager="transactionManager" /> -->
+     <tx:annotation-driven transaction-manager="transactionManager" />
 
     <!-- 拦截器方式配置事物
     spring有很多事物管理，其中很多都是被淘汰的了，企业一直在用，最好配置方法如下，配置事务之后，用切面直接切入所有servic层
@@ -153,4 +154,99 @@ http://www.springframework.org/schema/context/spring-context.xsd">
     <!--<aop:config>-->
         <!--<aop:advisor advice-ref="druid-stat-interceptor" pointcut-ref="druid-stat-pointcut" />-->
     <!--</aop:config>-->
+
+    <!-- Spring IOC对shiro的集成 -->
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="COOKIE_NAME" />
+        <!-- 保证该系统不会受到跨域的脚本操作攻击 -->
+        <property name="httpOnly" value="true" />
+        <!-- rememberMe 30天 -->
+        <property name="maxAge" value="2592000" />
+    </bean>
+
+    <!-- rememberMe管理器  加密处理中的额外加密方式：加盐处理  盐值-->
+    <!--   "1t2h3i4n1k1n2o2v3o344"     '1234'  -->
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}" />
+        <property name="cookie" ref="rememberMeCookie" />
+    </bean>
+
+    <!-- 配置ModularRealmAuthenticator，可实现多Realm认证 -->
+    <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+        <!-- 配置Realm认证策略 -->
+        <property name="authenticationStrategy">
+            <bean class="org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy"/>
+        </property>
+    </bean>
+
+    <!-- 配置自定义Realm，自定义Realm需要继承org.apache.shiro.realm.AuthorizingRealm -->
+    <bean id="userRealm" class="com.tap2up.utils.UserRealm">
+        <!-- 配置密码匹配器 -->
+        <property name="credentialsMatcher">
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <!-- 加密算法为MD5 -->
+                <property name="hashAlgorithmName" value="MD5"/>
+                <!-- 加密次数 -->
+                <property name="hashIterations" value="11"/>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- 配置权限管理器 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <!-- 加载上面配置好的认证策略-->
+        <property name="authenticator" ref="authenticator"/>
+        <!-- 加载自定义的认证类 -->
+        <property name="realms">
+            <list>
+                <ref bean="userRealm" />
+            </list>
+        </property>
+        <property name="rememberMeManager" ref="rememberMeManager" />
+    </bean>
+
+    <!-- Shiro生命周期处理器 -->
+    <!-- 配置lifecycleBeanPostProcessor，Shiro的生命周期管理器 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+    <!-- 启用Spring IOC容器对Shiro管理，但必须配置了lifecycleBeanPostProcessor后才可以使用 -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor" />
+
+    <!-- 开启securityManager管理所有用户的安全操作,securityManager来自Spring IOC容器的配置 -->
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager" />
+    </bean>
+
+    <!--
+        配置shiro过滤器,这里的id必须与web.xml中的shiroFilter filterName一致
+    -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager" />
+        <property name="loginUrl" value="/login.jsp" />
+        <property name="successUrl" value="/index.jsp" />
+        <property name="unauthorizedUrl" value="/error.jsp" />
+        <!--
+            配置需要受保护的页面
+            以及访问这些页面需要的权限
+            1) anon  可以匿名访问的页面
+            2) authc 必须认证后才可以访问的页面
+        -->
+        <property name="filterChainDefinitions">
+            <value>
+                <!--加载静态资源-->
+                /js/** = anon
+                /css/** = anon
+                /img/** = anon
+                <!--加载不需要认证的页面-->
+                /login.jsp = anon
+                /login = anon
+                /reg.jsp = anon
+                /reg = anon
+                /logout = logout
+                <!--除以上配置外，其他请求全部必须认证-->
+                /** = authc
+            </value>
+        </property>
+    </bean>
+
 </beans>

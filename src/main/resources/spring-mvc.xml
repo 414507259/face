@@ -13,6 +13,7 @@ http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <!-- 自动扫描controller包下的所有类，使其认为spring mvc的控制器 -->
     <context:component-scan base-package="com.tap2up.controller"/>
+
     <!-- 对模型视图名称的解析，即在模型视图名称添加前后缀    controller方法返回值+.jsp-->
     <!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:prefix="/" p:suffix=".jsp" />-->
     <mvc:annotation-driven>
@@ -31,6 +32,7 @@ http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
         </mvc:message-converters>
     </mvc:annotation-driven>
+
     <!-- 解决@ResponseBody中文乱码 -->
     <mvc:interceptors>
         <mvc:interceptor>
@@ -50,5 +52,6 @@ http://www.springframework.org/schema/mvc/spring-mvc.xsd">
         <!-- 延迟文件解析 -->
         <property name="resolveLazily" value="true"/>
     </bean>
+
 
 </beans>
