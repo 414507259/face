@@ -20,7 +20,7 @@ http://www.springframework.org/schema/context/spring-context.xsd">
     -->
     <bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
         <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-        <property name="url" value="jdbc:mysql://localhost:3306/face_recognition?serverTimezone=GMT%2B8" />
+        <property name="url" value="jdbc:mysql://localhost:3306/face_recognition?useUnicode=true&amp;characterEncoding=utf-8" />
         <property name="username" value="root" />
         <property name="password" value="123" />
         <!-- 初始化连接大小 -->
@@ -73,7 +73,7 @@ http://www.springframework.org/schema/context/spring-context.xsd">
         <!--configLocation属性指定mybatis的核心配置文件-->
         <property name="configLocation" value="classpath:mybatis.xml" />
         <!-- 自动扫描entity目录, 省掉Configuration.xml里的手工配置 -->
-<!--        <property name="mapperLocations" value="classpath:mapper/UserMapper.xml" />-->
+        <property name="mapperLocations" value="classpath:mapper/*.xml" />
     </bean>
     <!--
     Mybatis MapperScannerConfigurer 自动扫描 将Mapper接口生成代理注入到Spring
@@ -130,7 +130,7 @@ http://www.springframework.org/schema/context/spring-context.xsd">
         <aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice" />
     </aop:config>
 
-
+    <aop:aspectj-autoproxy  proxy-target-class="true"/>
     <!-- 配置druid监控spring jdbc
         至于Druid是一个用于大数据实时查询和分析的高容错、高性能开源分布式系统，旨在快速处理大规模的数据，并能够实现快速查询和分析。
         尤其是当发生代码部署、机器故障以及其他产品系统遇到宕机等情况时，Druid仍能够保持100%正常运行。
@@ -210,7 +210,9 @@ http://www.springframework.org/schema/context/spring-context.xsd">
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
 
     <!-- 启用Spring IOC容器对Shiro管理，但必须配置了lifecycleBeanPostProcessor后才可以使用 -->
-    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor" />
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor" >
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
 
     <!-- 开启securityManager管理所有用户的安全操作,securityManager来自Spring IOC容器的配置 -->
     <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
@@ -222,9 +224,9 @@ http://www.springframework.org/schema/context/spring-context.xsd">
     -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager" />
-        <property name="loginUrl" value="/login.jsp" />
-        <property name="successUrl" value="/index.jsp" />
-        <property name="unauthorizedUrl" value="/error.jsp" />
+<!--        <property name="loginUrl" value="/login.jsp" />-->
+<!--        <property name="successUrl" value="/index.jsp" />-->
+<!--        <property name="unauthorizedUrl" value="/error.jsp" />-->
         <!--
             配置需要受保护的页面
             以及访问这些页面需要的权限
@@ -238,11 +240,12 @@ http://www.springframework.org/schema/context/spring-context.xsd">
                 /css/** = anon
                 /img/** = anon
                 <!--加载不需要认证的页面-->
-                /login.jsp = anon
-                /login = anon
-                /reg.jsp = anon
-                /reg = anon
                 /logout = logout
+                /login.do = anon
+                /reg.do = anon
+                /fileupload.do = anon
+                /insertFaceInfo.do = anon
+                /synchronize.do = anon
                 <!--除以上配置外，其他请求全部必须认证-->
                 /** = authc
             </value>

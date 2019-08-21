@@ -43,7 +43,7 @@
         </javaClientGenerator>
 
         <!-- 相关表的配置 多表就配置多个  tableName表名  domainObjectName类名 -->
-        <table tableName="users" domainObjectName="Users" enableCountByExample="false"
+        <table tableName="userInfo" domainObjectName="UserInfo" enableCountByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                enableUpdateByExample="false"/>
     </context>

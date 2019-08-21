@@ -14,15 +14,29 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserService {
+    private final UsersMapper usersMapper;
+
     @Autowired
-    private UsersMapper usersMapper;
-    public Users getUser(String username){
-        return usersMapper.getUser(username);
+    public UserService(UsersMapper usersMapper) {
+        this.usersMapper = usersMapper;
     }
-    public void regUser(String username,String password){
-        Users users = new Users();
-        users.setUsername(username);
-        users.setPassword(password);
+
+    /**
+     * 根据用户名获取用户信息
+     * @param username 用户名
+     * @return 用户信息
+     */
+    public Users getUser(String username){
+        Users users = usersMapper.getUser(username);
+        System.out.println(users);
+        return users;
+    }
+
+    /**
+     * 注册用户
+     * @param users 用户信息
+     */
+    public void regUser(Users users){
         usersMapper.insertSelective(users);
     }
 }

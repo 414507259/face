@@ -22,11 +22,8 @@
   </sql>
 
 
-  <select id="getUser" parameterType="java.lang.String" resultType="com.tap2up.pojo.Users">
-    select
-    <include refid="Base_Column_List" />
-    from users
-    where username = #{arg0}
+  <select id="getUser" resultType="com.tap2up.pojo.Users">
+    SELECT * FROM users where username = #{username}
   </select>
 
 
@@ -62,6 +59,7 @@
       #{logintime,jdbcType=TIMESTAMP}, #{endtime,jdbcType=TIMESTAMP}, #{auth,jdbcType=VARCHAR}
       )
   </insert>
+
   <insert id="insertSelective" parameterType="com.tap2up.pojo.Users">
     <!--
       WARNING - @mbg.generated
