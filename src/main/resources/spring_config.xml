@@ -244,8 +244,8 @@ http://www.springframework.org/schema/context/spring-context.xsd">
                 /login.do = anon
                 /reg.do = anon
                 /fileupload.do = anon
-                /insertFaceInfo.do = anon
-                /synchronize.do = anon
+                /face/* = anon
+                /record/* = anon
                 <!--除以上配置外，其他请求全部必须认证-->
                 /** = authc
             </value>

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Created with IntelliJ IDEA.
  * User: zxb
  * Date: 2019/08/12
- * Description:
+ * Description: 处理登录账户请求
  * Version: V1.0
  */
 @Controller
@@ -27,7 +27,6 @@ public class UserController {
 
     @Autowired
     public UserController(UserService userService) {
-        System.out.println("--------------------------UserController构造函数");
         this.userService = userService;
     }
 
@@ -48,19 +47,27 @@ public class UserController {
                 currentUser.login(upToken);    // 调用realm认证用户权限
                 return "成功";
             } catch (IncorrectCredentialsException ice) {
-                System.out.println("用户名/密码不匹配！");
+                return "用户名/密码不匹配！";
             } catch (LockedAccountException lae) {
-                System.out.println("账户已被冻结！");
+//                System.out.println("账户已被冻结！");
+                return "账户已被冻结！";
             } catch (UnknownAccountException uae) {
-                System.out.println("账户不存在");
+//                System.out.println("账户不存在");
+                return "账户不存在";
             } catch (AuthenticationException ae) {
-                System.out.println(ae.getMessage());
+//                System.out.println(ae.getMessage());
+                return ae.getMessage();
             }
         }
         return "失败";
     }
 
 
+    /**
+     * 注册用户
+     * @param users 用户信息
+     * @return 注册状态
+     */
     @RequestMapping(value = "/reg")
     @ResponseBody
     public String regUser(Users users) {

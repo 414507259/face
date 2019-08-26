@@ -173,6 +173,7 @@
       <if test="feature != null">
         feature = #{feature,jdbcType=LONGVARBINARY},
       </if>
+      isupdate = 1,
     </set>
     where _id = #{id,jdbcType=INTEGER}
   </update>

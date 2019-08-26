@@ -6,6 +6,7 @@ import com.tap2up.mapper.UserInfoMapper;
 import com.tap2up.pojo.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +26,9 @@ public class FaceLibraryService {
     public static Long total = 0L;
 
     public int insertFaceInfo(UserInfo userInfo){
+        Long time = System.currentTimeMillis();
+        userInfo.setCtime(time);
+        userInfo.setUpdateTime(time);
         return userInfoMapper.insertSelective(userInfo);
     }
 
@@ -45,9 +49,15 @@ public class FaceLibraryService {
      * 将状态改为未更新
      * @param list 用户信息
      */
-    public void updata(List<UserInfo> list){
+    private void updata(List<UserInfo> list){
         for (int i = 0; i < list.size(); i++) {
             userInfoMapper.updateIsupdateByPrimaryKey(0,list.get(i).getId());
         }
+    }
+
+    public int updateFaceLibrary(UserInfo userInfo){
+        Long time = System.currentTimeMillis();
+        userInfo.setUpdateTime(time);
+        return userInfoMapper.updateByPrimaryKeySelective(userInfo);
     }
 }

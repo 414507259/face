@@ -15,17 +15,19 @@ import java.util.List;
  * Created with IntelliJ IDEA.
  * User: 张雪彬
  * Date: 2019/08/19 16:13
- * Description:
+ * Description: 处理人脸库的请求
  * Version: V1.0
  */
 @Controller
-public class FaceUserInfoController {
+@RequestMapping(value = "face")
+public class FaceLibraryController {
 
     private static boolean isupdate = true;
     private static Long total = 0L;
 
     @Autowired
-    FaceLibraryService faceLibraryService = null;
+    private FaceLibraryService faceLibraryService;
+
 
     /**
      * 注册人脸库
@@ -72,5 +74,49 @@ public class FaceUserInfoController {
         }else {
             return new MyModel("0","无更新");
         }
+    }
+
+    /**
+     * 更新人脸库
+     * @param userInfo 用户信息
+     * @return 更新结果
+     */
+    @RequestMapping(value = "updateFaceLibrary")
+    @ResponseBody
+    public MyModel updateFaceLibrary(UserInfo userInfo){
+        int i = faceLibraryService.updateFaceLibrary(userInfo);
+        if (i > 0){
+            return new MyModel("200","更新成功");
+        }
+        return new MyModel("-1","无更新");
+    }
+
+    @RequestMapping(value = "deleteFace")
+    @ResponseBody
+    public MyModel deleteFace(int id,String groupId){
+        return new MyModel("200","删除成功");
+    }
+
+    @RequestMapping(value = "getFace")
+    @ResponseBody
+    public MyModel getFace(int id,String groupId){
+        return new MyModel("200","查询成功");
+    }
+
+    @RequestMapping(value = "addGroup")
+    @ResponseBody
+    public MyModel addGroup(){
+        return new MyModel("200","操作成功");
+    }
+
+    @RequestMapping(value = "deleteGroup")
+    @ResponseBody
+    public MyModel deleteGroup(){
+        return new MyModel("200","操作成功");
+    }
+    @RequestMapping(value = "getGroup")
+    @ResponseBody
+    public MyModel getGroup(){
+        return new MyModel("200","操作成功");
     }
 }
