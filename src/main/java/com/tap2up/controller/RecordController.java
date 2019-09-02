@@ -48,9 +48,10 @@ public class RecordController {
      */
     @RequestMapping(value = "getRecord")
     @ResponseBody
-    public MyModel getRecord(int currentPage, int pageSize){
-        List list = recordService.getRecord(currentPage,pageSize);
-        return new MyModel("200","获取成功",list);
+    public MyModel getRecord(Integer currentPage, Integer pageSize,@RequestParam(required = false) Long beginTime,
+                             @RequestParam(required = false) Long endTime,@RequestParam(defaultValue = "0") Integer type,
+                             @RequestParam(required = false) String group,@RequestParam(required = false) String name){
+        return recordService.getRecord(currentPage,pageSize,beginTime,endTime,type,group,name);
     }
 
     @RequestMapping(value = "deleteRecord")

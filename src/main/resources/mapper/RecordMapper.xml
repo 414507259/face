@@ -25,6 +25,7 @@
     <result column="timestamp" jdbcType="BIGINT" property="timestamp" />
     <result column="token" jdbcType="VARCHAR" property="token" />
     <result column="sign" jdbcType="VARCHAR" property="sign" />
+    <result column="userId" jdbcType="INTEGER" property="userid" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--
@@ -33,16 +34,30 @@
     -->
     _id, companyId, deviceSn, groupId, userName, groupName, signAvatar, signBgAvatar, 
     signTime, oneOne, oneN, mode, type, idNumber, idInfo, icNumber, timestamp, token, 
-    sign
+    sign,userId
   </sql>
 
   <select id="getRecord" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from record
+    <where>
+      <if test="beginTime != null and endTime !=null">
+        timestamp between #{beginTime} and #{endTime}
+      </if>
+      <if test="type != 0">
+        and type = #{type}
+      </if>
+      <if test="group != null">
+        and groupName = #{group}
+      </if>
+      <if test="name != null">
+        and userName = #{name}
+      </if>
+    </where>
+
     order by timestamp desc
   </select>
-
 
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -73,15 +88,15 @@
       signAvatar, signBgAvatar, signTime, 
       oneOne, oneN, mode, type, 
       idNumber, idInfo, icNumber, 
-      timestamp, token, sign
-      )
+      timestamp, token, sign, 
+      userId)
     values (#{id,jdbcType=INTEGER}, #{companyid,jdbcType=INTEGER}, #{devicesn,jdbcType=VARCHAR}, 
       #{groupid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{groupname,jdbcType=VARCHAR}, 
       #{signavatar,jdbcType=VARCHAR}, #{signbgavatar,jdbcType=VARCHAR}, #{signtime,jdbcType=VARCHAR}, 
       #{oneone,jdbcType=DOUBLE}, #{onen,jdbcType=DOUBLE}, #{mode,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, 
       #{idnumber,jdbcType=VARCHAR}, #{idinfo,jdbcType=VARCHAR}, #{icnumber,jdbcType=VARCHAR}, 
-      #{timestamp,jdbcType=BIGINT}, #{token,jdbcType=VARCHAR}, #{sign,jdbcType=VARCHAR}
-      )
+      #{timestamp,jdbcType=BIGINT}, #{token,jdbcType=VARCHAR}, #{sign,jdbcType=VARCHAR}, 
+      #{userid,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.tap2up.pojo.Record">
     <!--
@@ -147,6 +162,9 @@
       <if test="sign != null">
         sign,
       </if>
+      <if test="userid != null">
+        userId,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -205,6 +223,9 @@
       </if>
       <if test="sign != null">
         #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -269,6 +290,9 @@
       <if test="sign != null">
         sign = #{sign,jdbcType=VARCHAR},
       </if>
+      <if test="userid != null">
+        userId = #{userid,jdbcType=INTEGER},
+      </if>
     </set>
     where _id = #{id,jdbcType=INTEGER}
   </update>
@@ -295,7 +319,8 @@
       icNumber = #{icnumber,jdbcType=VARCHAR},
       timestamp = #{timestamp,jdbcType=BIGINT},
       token = #{token,jdbcType=VARCHAR},
-      sign = #{sign,jdbcType=VARCHAR}
+      sign = #{sign,jdbcType=VARCHAR},
+      userId = #{userid,jdbcType=INTEGER}
     where _id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

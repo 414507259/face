@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.tap2up.mapper.RecordMapper;
 import com.tap2up.pojo.Record;
+import com.tap2up.utils.MyModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,16 +30,24 @@ public class RecordService {
         return recordMapper.insertSelective(record);
     }
 
-    public List getRecord(int currentPage, int pageSize){
+    public MyModel getRecord(Integer currentPage, Integer pageSize,Long beginTime,Long endTime,Integer type,
+                          String group,String name){
         PageHelper.startPage(currentPage, pageSize);
-        List<Map> list = recordMapper.getRecord();
+        if (beginTime != null && beginTime.equals(endTime)){
+         endTime = endTime + 86400000;
+        }
+        if (name == "")
+            name = null;
+        if (group == "" || "所有".equals(group))
+            group = null;
+
+        List<Map> list = recordMapper.getRecord(beginTime,endTime,type,group,name);
         PageInfo<Map> pageInfo = new PageInfo<Map>(list);
         Long total = pageInfo.getTotal(); //获取总记录数
-        Map map = new HashMap();
-        map.put("total",total);
-        list.add(map);
-        return list;
+        MyModel myModel = new MyModel("200",""+total,list);
+        return myModel;
     }
+
     public int deleteRecord(int id){
         return recordMapper.deleteByPrimaryKey(id);
     }
