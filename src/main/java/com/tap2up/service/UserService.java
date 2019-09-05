@@ -5,6 +5,8 @@ import com.tap2up.pojo.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: 张雪彬
@@ -38,5 +40,43 @@ public class UserService {
      */
     public void regUser(Users users){
         usersMapper.insertSelective(users);
+    }
+
+    /**
+     * 给用户添加角色
+     * @param roleIds 角色id列表
+     * @param uId 用户id
+     * @return
+     */
+    public int addRoles(List<Integer> roleIds, int uId) {
+        return usersMapper.addRoles(roleIds, uId);
+    }
+
+    /**
+     * 修改用户
+     * @param user 用户
+     * @return
+     */
+    public int update(Users user) {
+        return usersMapper.updateByPrimaryKeySelective(user);
+    }
+
+    /**
+     * 删除用户的角色
+     * @param roleIds
+     * @param uId
+     * @return
+     */
+    public int deleteRoles(List<Integer> roleIds, int uId) {
+        return usersMapper.deleteRoles(roleIds, uId);
+    }
+
+    /**
+     * 通过id查找用户
+     * @param uId 用户id
+     * @return
+     */
+    public Users getUserById(int uId) {
+        return usersMapper.selectByPrimaryKey(uId);
     }
 }
