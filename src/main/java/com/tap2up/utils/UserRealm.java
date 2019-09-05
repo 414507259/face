@@ -1,16 +1,23 @@
 package com.tap2up.utils;
 
+import com.tap2up.pojo.Permission;
+import com.tap2up.pojo.Role;
 import com.tap2up.pojo.Users;
+import com.tap2up.service.PermissionService;
+import com.tap2up.service.RoleService;
 import com.tap2up.service.UserService;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,6 +30,10 @@ public class UserRealm extends AuthorizingRealm {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private PermissionService permissionService;
 
 
     @Override
@@ -53,23 +64,27 @@ public class UserRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        Object principal = principals.getPrimaryPrincipal();            //获取登录的用户pojo对象
-        Users user = (Users)principal;
-        String auth = user.getAuth();
-        System.out.println("AuthorizationInfo principal=" + principal);
-    /*
-       根据不同的权限判断可访问的资源
-       info.addRole("1")中的形参值，在spring_database.xml中shiroFilter进行配置
-    */
-        if("1".equals(auth)){
-            info.addRole("1");
-        }
-        if("2".equals(auth)){
-            info.addRole("2");
-        }
-        info.addRole("3");
+        Subject subject = SecurityUtils.getSubject(); //获得一个Subject对象
+        Users user = (Users) subject.getPrincipal(); //获得登录的对象
 
-        return info;
+        List<Role> roleList = roleService.findRoleListByUsername(user.getUsername());
+        List<Permission> permissionList = null;
+        if (null == roleList || 0 == roleList.size()) {
+            return null;
+        } else {
+            SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+            for (Role roleInfo : roleList) {
+                info.addRole(roleInfo.getRolename());
+                permissionList = permissionService.findPermissionsByRoleName(roleInfo
+                        .getRolename());
+                for (Permission permissionInfo : permissionList) {
+                    if(permissionInfo == null){
+                        continue;
+                    }
+                    info.addStringPermission(permissionInfo.getPermission());
+                }
+            }
+            return info;
+        }
     }
 }
