@@ -37,6 +37,29 @@
     sign,userId
   </sql>
 
+  <select id="getUserStatistics" resultType="java.util.Map">
+SELECT *
+FROM alfuserlibrary ,
+(select userId AS id,COUNT(*),MIN(`timestamp`),MAX(`timestamp`) FROM record GROUP BY userId)
+AS re
+<where>
+  re.id = alfuserlibrary.userId
+  <if test="beginTime != null and endTime !=null">
+    and timestamp between #{beginTime} and #{endTime}
+  </if>
+  <if test="type != 0">
+    and type = #{type}
+  </if>
+  <if test="group != null">
+    and groupName = #{group}
+  </if>
+  <if test="name != null">
+    and userName = #{name}
+  </if>
+</where>
+</select>
+
+
   <select id="getRecord" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

@@ -16,9 +16,9 @@
 
         <!-- 数据库的相关配置 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/face_recognition"
+                        connectionURL="jdbc:mysql://47.105.209.26:3306/face_recognition"
                         userId="root"
-                        password="123"/>
+                        password="!Think123456"/>
 
         <!--指定生成的类型为java类型，避免数据库中number等类型字段 -->
         <javaTypeResolver>
@@ -43,7 +43,7 @@
         </javaClientGenerator>
 
         <!-- 相关表的配置 多表就配置多个  tableName表名  domainObjectName类名 -->
-        <table tableName="record" domainObjectName="Record" enableCountByExample="false"
+        <table tableName="group" domainObjectName="Group" enableCountByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                enableUpdateByExample="false"/>
     </context>

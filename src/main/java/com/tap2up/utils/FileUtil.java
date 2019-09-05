@@ -22,18 +22,18 @@ public class FileUtil {
 //        System.out.println("============"+uploadPath+"=====");
         //判断上传文件类型
 
-            String uuid2 = getUUID();
+            String uuid = getUUID();
             String str = request.getServletContext().getRealPath("");
         System.out.println(str);
 //            System.out.println(str.lastIndexOf(File.separator));
 //        str.substring(0, str.lastIndexOf("ROOT")) +
             str = str.substring(0, str.lastIndexOf("face_war")) +"file" + File.separator;
 //            System.out.println(str);
-            String path = str + uuid2 + suffix;
-            String path2 = "file/" + uuid2 + suffix;
+            String path = str + uuid + suffix;
+//            String path2 = "file/" + uuid + suffix;
             File newFile = new File(path);
             FileUtils.copyInputStreamToFile(userHead.getInputStream(), newFile);
-            return path2;
+            return uuid;
         }
 
     /**

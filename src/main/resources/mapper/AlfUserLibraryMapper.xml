@@ -50,11 +50,11 @@
     where userId = #{userId}
   </select>
 
-<select id="getUserStatistics" resultType="java.util.Map">
-SELECT *
-FROM alfuserlibrary ,
-(select userId AS id,COUNT(*),MIN(`timestamp`),MAX(`timestamp`) FROM record GROUP BY userId)
-AS re WHERE re.id = alfuserlibrary.userId;
+<select id="getByGroupId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  select
+  count(*)
+  from alfuserlibrary
+  where groupId = #{groupId}
 </select>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
