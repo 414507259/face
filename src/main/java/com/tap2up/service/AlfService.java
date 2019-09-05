@@ -21,6 +21,8 @@ public class AlfService {
     private AlfUserLibraryMapper mapper;
 
     public int addStaff(AlfUserLibrary library){
+        Long time = System.currentTimeMillis();
+        library.setCreateat(time);
         return mapper.insertSelective(library);
     }
 
@@ -28,7 +30,5 @@ public class AlfService {
         return mapper.getAlfUserLibrarybyUserId(userId);
     }
 
-    public Map getUserStatistics(){
-        return mapper.getUserStatistics();
-    }
+
 }

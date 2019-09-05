@@ -225,7 +225,7 @@ http://www.springframework.org/schema/context/spring-context.xsd">
     -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager" />
-<!--        <property name="loginUrl" value="/login.jsp" />-->
+        <property name="loginUrl" value="/index.html" />
 <!--        <property name="successUrl" value="/index.jsp" />-->
 <!--        <property name="unauthorizedUrl" value="/error.jsp" />-->
         <!--
@@ -251,6 +251,7 @@ http://www.springframework.org/schema/context/spring-context.xsd">
                 /face/* = anon
                 /record/* = anon
                 /alf/** = anon
+                /group/** = anon
                 <!--除以上配置外，其他请求全部必须认证-->
                 /** = authc
             </value>

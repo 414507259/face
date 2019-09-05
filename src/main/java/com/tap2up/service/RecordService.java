@@ -24,6 +24,11 @@ public class RecordService {
     @Autowired
     private RecordMapper recordMapper;
 
+    /**
+     *   添加打卡记录
+     * @param record 刷脸用户信息
+     * @return 添加结果
+     */
     public int addRecord(Record record){
         Long time = System.currentTimeMillis();
         record.setTimestamp(time);
@@ -32,7 +37,6 @@ public class RecordService {
 
     public MyModel getRecord(Integer currentPage, Integer pageSize,Long beginTime,Long endTime,Integer type,
                           String group,String name){
-        PageHelper.startPage(currentPage, pageSize);
         if (beginTime != null && beginTime.equals(endTime)){
          endTime = endTime + 86400000;
         }
@@ -41,12 +45,15 @@ public class RecordService {
         if (group == "" || "所有".equals(group))
             group = null;
 
-        List<Map> list = recordMapper.getRecord(beginTime,endTime,type,group,name);
-        PageInfo<Map> pageInfo = new PageInfo<Map>(list);
+        PageHelper.startPage(currentPage, pageSize);
+        List<Map<String,Object>> list = recordMapper.getRecord(beginTime,endTime,type,group,name);
+        PageInfo<Map<String,Object>> pageInfo = new PageInfo<Map<String,Object>>(list);
         Long total = pageInfo.getTotal(); //获取总记录数
         MyModel myModel = new MyModel("200",""+total,list);
         return myModel;
     }
+
+
 
     public int deleteRecord(int id){
         return recordMapper.deleteByPrimaryKey(id);
@@ -55,5 +62,22 @@ public class RecordService {
         for (int i = 0; i < id.length; i++) {
             deleteRecord(id[i]);
         }
+    }
+
+    public MyModel getUserStatistics(Integer currentPage, Integer pageSize,Long beginTime,Long endTime,Integer type,
+                                 String group,String name){
+        if (beginTime != null && beginTime.equals(endTime)){
+            endTime = endTime + 86400000;
+        }
+        if (name == "")
+            name = null;
+        if (group == "" || "所有".equals(group))
+            group = null;
+        PageHelper.startPage(currentPage, pageSize);
+        List<Map> list = recordMapper.getUserStatistics(beginTime,endTime,type,group,name);
+        PageInfo<Map> pageInfo = new PageInfo<Map>(list);
+        Long total = pageInfo.getTotal(); //获取总记录数
+        MyModel myModel = new MyModel("200",""+total,list);
+        return myModel;
     }
 }
