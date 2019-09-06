@@ -48,8 +48,11 @@ public class GroupController {
      */
     @RequestMapping(value = "selectGroup")
     @ResponseBody
-    public MyModel selectGroup(){
-        List list = groupService.selectGroup();
+    public MyModel selectGroup(String type){
+        if (type == ""){
+            type = null;
+        }
+        List list = groupService.selectGroup(type);
         if (list != null){
         return new MyModel("200","成功",list);
         }

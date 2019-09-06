@@ -37,16 +37,20 @@
     sign,userId
   </sql>
 
+<!--查询获取通行统计-->
   <select id="getUserStatistics" resultType="java.util.Map">
 SELECT *
 FROM alfuserlibrary ,
-(select userId AS id,COUNT(*),MIN(`timestamp`),MAX(`timestamp`) FROM record GROUP BY userId)
+(select userId AS id,COUNT(*),MIN(`timestamp`),MAX(`timestamp`) FROM record
+  <if test="beginTime != null and endTime !=null">
+  where
+    timestamp between #{beginTime} and #{endTime}
+  </if>
+  GROUP BY userId)
 AS re
 <where>
   re.id = alfuserlibrary.userId
-  <if test="beginTime != null and endTime !=null">
-    and timestamp between #{beginTime} and #{endTime}
-  </if>
+
   <if test="type != 0">
     and type = #{type}
   </if>
@@ -59,23 +63,25 @@ AS re
 </where>
 </select>
 
-
+<!--查询获取通行记录-->
   <select id="getRecord" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List" />
-    from record
+    record._id, groupId, userName, signAvatar, signBgAvatar,
+    signTime, record.type, timestamp,userId,_group.groupName as groupName
+    from record,_group
     <where>
+    record.groupId = _group._id
       <if test="beginTime != null and endTime !=null">
-        timestamp between #{beginTime} and #{endTime}
+       and timestamp between #{beginTime} and #{endTime}
       </if>
       <if test="type != 0">
-        and type = #{type}
+        and record.type = #{type}
       </if>
       <if test="group != null">
-        and groupName = #{group}
+        and _group.groupName = #{group}
       </if>
       <if test="name != null">
-        and userName = #{name}
+        and record.userName = #{name}
       </if>
     </where>
 

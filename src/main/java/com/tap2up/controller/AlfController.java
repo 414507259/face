@@ -42,7 +42,7 @@ public class AlfController {
     public AlfModel addStaff(AlfUserLibrary library){
         int i = alfService.addStaff(library);
         if (i > 0){
-            return new AlfModel("0","ok");
+            return new AlfModel("0",library.getId()+"");
         }else {
             return new AlfModel("-2","人员 id 不可用");
         }

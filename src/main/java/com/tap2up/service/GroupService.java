@@ -31,8 +31,8 @@ public class GroupService {
         return groupMapper.insertSelective(group);
     }
 
-    public List<Map> selectGroup(){
-        return groupMapper.selectGroup();
+    public List<Map> selectGroup(String type){
+        return groupMapper.selectGroup(type);
     }
 
     public int updateGroup(Group group){
