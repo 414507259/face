@@ -1,6 +1,10 @@
 package com.tap2up.mapper;
 
 import com.tap2up.pojo.UserInfo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 public interface UserInfoMapper {
     int deleteByPrimaryKey(Integer infoid);
@@ -14,4 +18,8 @@ public interface UserInfoMapper {
     int updateByPrimaryKeySelective(UserInfo record);
 
     int updateByPrimaryKey(UserInfo record);
+
+    List<Map> findUserInfoPreview(@Param("username") String username, @Param("groupId") Integer groupId);
+
+    Map findUserInfoDetailById(Integer id);
 }

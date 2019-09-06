@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tap2up.mapper.PermissionMapper">
+  <resultMap id="BaseResultMap" type="com.tap2up.pojo.Permission">
+    <id column="permissionId" jdbcType="INTEGER" property="permissionid" />
+    <result column="permissionName" jdbcType="VARCHAR" property="permissionname" />
+    <result column="resourceType" jdbcType="CHAR" property="resourcetype" />
+    <result column="parentId" jdbcType="BIGINT" property="parentid" />
+    <result column="parentIds" jdbcType="VARCHAR" property="parentids" />
+    <result column="permission" jdbcType="VARCHAR" property="permission" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="isAvailable" jdbcType="BIT" property="isavailable" />
+    <result column="isDelete" jdbcType="INTEGER" property="isdelete" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    permissionId, permissionName, resourceType, parentId, parentIds, permission, url, 
+    isAvailable, isDelete
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from permission
+    where permissionId = #{permissionid,jdbcType=INTEGER}
+    and isDelete = 0
+  </select>
+  <select id="selectByRolename" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    p.*
+    from permission p
+    inner join role_permission rp
+    on p.permissionId = rp.permission_id
+    inner join role r
+    on r.roleId = rp.role_id
+    where r.roleName = #{rolename}
+    and p.isDelete = 0
+  </select>
+  <select id="selectByRid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select pm.* from permission pm
+    left join role_permission rpm
+    on pm.permissionId = rpm.permissionId
+    where rpm.roleId = #{rId}
+    and pm.isDelete = 0
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from permission
+    where permissionId = #{permissionid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tap2up.pojo.Permission">
+    insert into permission (permissionId, permissionName, resourceType, 
+      parentId, parentIds, permission, 
+      url, isAvailable, isDelete
+      )
+    values (#{permissionid,jdbcType=INTEGER}, #{permissionname,jdbcType=VARCHAR}, #{resourcetype,jdbcType=CHAR}, 
+      #{parentid,jdbcType=BIGINT}, #{parentids,jdbcType=VARCHAR}, #{permission,jdbcType=VARCHAR}, 
+      #{url,jdbcType=VARCHAR}, #{isavailable,jdbcType=BIT}, #{isdelete,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tap2up.pojo.Permission">
+    insert into permission
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="permissionid != null">
+        permissionId,
+      </if>
+      <if test="permissionname != null">
+        permissionName,
+      </if>
+      <if test="resourcetype != null">
+        resourceType,
+      </if>
+      <if test="parentid != null">
+        parentId,
+      </if>
+      <if test="parentids != null">
+        parentIds,
+      </if>
+      <if test="permission != null">
+        permission,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="isavailable != null">
+        isAvailable,
+      </if>
+      <if test="isdelete != null">
+        isDelete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="permissionid != null">
+        #{permissionid,jdbcType=INTEGER},
+      </if>
+      <if test="permissionname != null">
+        #{permissionname,jdbcType=VARCHAR},
+      </if>
+      <if test="resourcetype != null">
+        #{resourcetype,jdbcType=CHAR},
+      </if>
+      <if test="parentid != null">
+        #{parentid,jdbcType=BIGINT},
+      </if>
+      <if test="parentids != null">
+        #{parentids,jdbcType=VARCHAR},
+      </if>
+      <if test="permission != null">
+        #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="isavailable != null">
+        #{isavailable,jdbcType=BIT},
+      </if>
+      <if test="isdelete != null">
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tap2up.pojo.Permission">
+    update permission
+    <set>
+      <if test="permissionname != null">
+        permissionName = #{permissionname,jdbcType=VARCHAR},
+      </if>
+      <if test="resourcetype != null">
+        resourceType = #{resourcetype,jdbcType=CHAR},
+      </if>
+      <if test="parentid != null">
+        parentId = #{parentid,jdbcType=BIGINT},
+      </if>
+      <if test="parentids != null">
+        parentIds = #{parentids,jdbcType=VARCHAR},
+      </if>
+      <if test="permission != null">
+        permission = #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="isavailable != null">
+        isAvailable = #{isavailable,jdbcType=BIT},
+      </if>
+      <if test="isdelete != null">
+        isDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+    </set>
+    where permissionId = #{permissionid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tap2up.pojo.Permission">
+    update permission
+    set permissionName = #{permissionname,jdbcType=VARCHAR},
+      resourceType = #{resourcetype,jdbcType=CHAR},
+      parentId = #{parentid,jdbcType=BIGINT},
+      parentIds = #{parentids,jdbcType=VARCHAR},
+      permission = #{permission,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      isAvailable = #{isavailable,jdbcType=BIT},
+      isDelete = #{isdelete,jdbcType=INTEGER}
+    where permissionId = #{permissionid,jdbcType=INTEGER}
+  </update>
+</mapper>

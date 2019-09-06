@@ -23,6 +23,8 @@ public class UserInfo {
 
     private Integer positionid;
 
+    private Integer id;
+
     private Integer isdelete;
 
     public Integer getInfoid() {
@@ -103,6 +105,14 @@ public class UserInfo {
 
     public void setPositionid(Integer positionid) {
         this.positionid = positionid;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getIsdelete() {

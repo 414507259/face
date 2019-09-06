@@ -12,17 +12,48 @@
     <result column="hireDate" jdbcType="TIMESTAMP" property="hiredate" />
     <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="positionId" jdbcType="INTEGER" property="positionid" />
+    <result column="_id" jdbcType="INTEGER" property="id" />
     <result column="isDelete" jdbcType="INTEGER" property="isdelete" />
   </resultMap>
   <sql id="Base_Column_List">
     infoId, gender, tel, workNumber, email, workingPlace, age, hireDate, description, 
-    positionId, isDelete
+    positionId, _id, isDelete
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from userInfo
     where infoId = #{infoid,jdbcType=INTEGER}
+    and isDelete = 0
+  </select>
+  <select id="findUserInfoPreview" resultType="java.util.Map">
+    select alf.userName, alf.birthDay, info.gender,info.tel,info.email,g.groupName
+    from alfuserlibrary alf
+    left join userInfo info
+    on alf._id = info._id
+    left join _group g
+    on alf.groupId = g._id
+    where info.isDelete = 0
+    and alf.type = 0
+    <if test="username != null">
+      and alf.userName = #{username,jdbcType=VARCHAR}
+    </if>
+    <if test="groupId != null">
+      and alf.groupId = #{groupId,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="findUserInfoDetailById" parameterType="java.lang.Integer" resultType="java.util.Map">
+    select alf.icNumber,alf.idNumber,alf.type,alf.userName,alf.birthDay,alf.prompt,
+    info.gender,info.tel,info.workNumber,info.email,info.workingPlace,info.age,info.hireDate,info.description,
+    g.groupName
+    from alfuserlibrary alf
+    left join userInfo info
+    on alf._id = info._id
+    left join _group g
+    on alf.groupId = g._id
+    where info.isDelete = 0
+    and alf.type = 0
+    and alf._id = #{id}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from userInfo
@@ -32,11 +63,11 @@
     insert into userInfo (infoId, gender, tel, 
       workNumber, email, workingPlace, 
       age, hireDate, description, 
-      positionId, isDelete)
+      positionId, _id, isDelete)
     values (#{infoid,jdbcType=INTEGER}, #{gender,jdbcType=CHAR}, #{tel,jdbcType=VARCHAR}, 
       #{worknumber,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{workingplace,jdbcType=VARCHAR}, 
       #{age,jdbcType=INTEGER}, #{hiredate,jdbcType=TIMESTAMP}, #{description,jdbcType=VARCHAR}, 
-      #{positionid,jdbcType=INTEGER}, #{isdelete,jdbcType=INTEGER})
+      #{positionid,jdbcType=INTEGER}, #{id,jdbcType=INTEGER} #{isdelete,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.tap2up.pojo.UserInfo">
     insert into userInfo
@@ -70,6 +101,9 @@
       </if>
       <if test="positionid != null">
         positionId,
+      </if>
+      <if test="id != null">
+        _id,
       </if>
       <if test="isdelete != null">
         isDelete,
@@ -106,6 +140,9 @@
       <if test="positionid != null">
         #{positionid,jdbcType=INTEGER},
       </if>
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
       <if test="isdelete != null">
         #{isdelete,jdbcType=INTEGER},
       </if>
@@ -141,6 +178,9 @@
       <if test="positionid != null">
         positionId = #{positionid,jdbcType=INTEGER},
       </if>
+      <if test="id != null">
+        _id = #{id,jdbcType=INTEGER},
+      </if>
       <if test="isdelete != null">
         isDelete = #{isdelete,jdbcType=INTEGER},
       </if>
@@ -158,6 +198,7 @@
       hireDate = #{hiredate,jdbcType=TIMESTAMP},
       description = #{description,jdbcType=VARCHAR},
       positionId = #{positionid,jdbcType=INTEGER},
+      _id = #{id,jdbcType=INTEGER}
       isDelete = #{isdelete,jdbcType=INTEGER}
     where infoId = #{infoid,jdbcType=INTEGER}
   </update>
