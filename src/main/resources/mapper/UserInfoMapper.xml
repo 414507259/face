@@ -26,7 +26,7 @@
     where infoId = #{infoid,jdbcType=INTEGER}
     and isDelete = 0
   </select>
-  <select id="findUserInfoPreview" resultType="java.util.Map">
+  <select id="findUserInfoPreview" parameterType="java.lang.Integer" resultType="java.util.Map">
     select alf.userName, alf.birthDay, alf.userValidStartTime, alf.userValidEndTime, info.gender,info.tel,info.email,g.groupName
     from alfuserlibrary alf
     left join userInfo info
@@ -34,11 +34,13 @@
     left join _group g
     on alf.groupId = g._id
     where info.isDelete = 0
-    and alf.type = #{type,jdbcType=INTEGER}
-    <if test="username != null">
+    <if test="type != null and type != 0">
+      and alf.type = #{type,jdbcType=INTEGER}
+    </if>
+    <if test="username != null and username != ''">
       and alf.userName = #{username,jdbcType=VARCHAR}
     </if>
-    <if test="groupId != null">
+    <if test="groupId != null and groupId != 0">
       and alf.groupId = #{groupId,jdbcType=VARCHAR}
     </if>
   </select>
