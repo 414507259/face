@@ -160,6 +160,8 @@ http://www.springframework.org/schema/context/spring-context.xsd http://www.spri
         <!--<aop:advisor advice-ref="druid-stat-interceptor" pointcut-ref="druid-stat-pointcut" />-->
     <!--</aop:config>-->
 
+    <bean id="systemLogoutFilter" class="com.tap2up.utils.systemLogoutFilter"/>
+
     <!-- Shiro的Web过滤器 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <!-- Shiro的安全管理器，所有关于安全的操作都会经过SecurityManager -->
@@ -171,6 +173,7 @@ http://www.springframework.org/schema/context/spring-context.xsd http://www.spri
         <property name="filters">
             <util:map>
                 <entry key="authc" value-ref="formAuthenticationFilter"/>
+                <entry key="logout" value-ref="systemLogoutFilter" />
             </util:map>
         </property>
         <!-- 自定义的过滤器链，从上向下执行，一般将`/**`放到最下面 -->
@@ -231,5 +234,6 @@ http://www.springframework.org/schema/context/spring-context.xsd http://www.spri
          <!--关闭认证缓存-->
          <property name="AuthenticationCachingEnabled" value="false"></property>
     </bean>
+
 
 </beans>

@@ -2,6 +2,8 @@ package com.tap2up.controller;
 
 import com.tap2up.pojo.Users;
 import com.tap2up.service.UserService;
+import com.tap2up.utils.Result;
+import com.tap2up.utils.ResultUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.crypto.hash.SimpleHash;
@@ -10,7 +12,10 @@ import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,7 +41,7 @@ public class UserController {
      * @return 登录状态
      */
     @RequestMapping(value = "/login")
-    public String selectUser(@RequestParam String username, @RequestParam String password) {
+    public Result selectUser(@RequestParam String username, @RequestParam String password) {
         Subject currentUser = SecurityUtils.getSubject();                                     // shiro权限认证主体对象
         //currentUser.getSession().setTimeout(1000);//设置session过期时间，单位：毫秒
         if (!currentUser.isAuthenticated()) {                                                 // 满足shiro的可认证状态
@@ -44,21 +49,24 @@ public class UserController {
             upToken.setRememberMe(true);                                                     // 用户登录时效性
             try {
                 currentUser.login(upToken);    // 调用realm认证用户权限
-                return "成功";
+                Users user = (Users)currentUser.getPrincipal();
+                user.setLogintime(new Date());
+                userService.update(user);
+                return ResultUtil.success(user);
             } catch (IncorrectCredentialsException ice) {
-                return "用户名/密码不匹配！";
+                return ResultUtil.error(101,"用户名/密码不匹配！");
             } catch (LockedAccountException lae) {
 //                System.out.println("账户已被冻结！");
-                return "账户已被冻结！";
+                return ResultUtil.error(102,"账户已被冻结！");
             } catch (UnknownAccountException uae) {
 //                System.out.println("账户不存在");
-                return "账户不存在";
+                return ResultUtil.error(103,"用户不存在");
             } catch (AuthenticationException ae) {
 //                System.out.println(ae.getMessage());
-                return ae.getMessage();
+                return ResultUtil.error(100,ae.getMessage());
             }
         }
-        return "失败";
+        return ResultUtil.error(100,"失败");
     }
 
 
@@ -72,16 +80,6 @@ public class UserController {
         users.setPassword(md5(users.getUsername(),users.getPassword()));
         userService.regUser(users);
         return "成功";
-    }
-
-    /**
-     * 注销
-     * @return
-     */
-    @RequestMapping("/logout")
-    public String logout(){
-        SecurityUtils.getSubject().logout();
-        return "login";
     }
 
 
