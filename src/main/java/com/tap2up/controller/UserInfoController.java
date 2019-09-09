@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+@RequestMapping("/userInfo")
 @RestController
 public class UserInfoController {
 
