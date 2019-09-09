@@ -27,14 +27,14 @@
     and isDelete = 0
   </select>
   <select id="findUserInfoPreview" resultType="java.util.Map">
-    select alf.userName, alf.birthDay, info.gender,info.tel,info.email,g.groupName
+    select alf.userName, alf.birthDay, alf.userValidStartTime, alf.userValidEndTime, info.gender,info.tel,info.email,g.groupName
     from alfuserlibrary alf
     left join userInfo info
     on alf._id = info._id
     left join _group g
     on alf.groupId = g._id
     where info.isDelete = 0
-    and alf.type = 0
+    and alf.type = #{type,jdbcType=INTEGER}
     <if test="username != null">
       and alf.userName = #{username,jdbcType=VARCHAR}
     </if>

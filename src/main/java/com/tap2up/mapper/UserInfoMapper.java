@@ -19,7 +19,7 @@ public interface UserInfoMapper {
 
     int updateByPrimaryKey(UserInfo record);
 
-    List<Map> findUserInfoPreview(@Param("username") String username, @Param("groupId") Integer groupId);
+    List<Map> findUserInfoPreview(@Param("type") Integer type, @Param("username") String username, @Param("groupId") Integer groupId);
 
     Map findUserInfoDetailById(Integer id);
 }

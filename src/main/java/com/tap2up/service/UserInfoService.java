@@ -29,9 +29,9 @@ public class UserInfoService {
     }
 
 
-    public PageInfo findUserInfoPreview(Integer pageNum, Integer pageSize, String username, Integer groupId) {
+    public PageInfo findUserInfoPreview(Integer pageNum, Integer pageSize, Integer type, String username, Integer groupId) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Map> userInfoPreview = userInfoMapper.findUserInfoPreview(username, groupId);
+        List<Map> userInfoPreview = userInfoMapper.findUserInfoPreview(type, username, groupId);
         PageInfo pageInfo = new PageInfo(userInfoPreview,5);
         return pageInfo;
     }

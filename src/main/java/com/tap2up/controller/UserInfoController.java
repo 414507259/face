@@ -6,6 +6,7 @@ import com.tap2up.pojo.UserInfo;
 import com.tap2up.service.AlfService;
 import com.tap2up.service.UserInfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -62,6 +63,7 @@ public class UserInfoController {
      * 查找员工按分页
      * @param pageNum 当前页码
      * @param pageSize 每页显示条数
+     * @param type 用户类型
      * @param username 用户姓名
      * @param groupId 组id
      * @return
@@ -69,8 +71,9 @@ public class UserInfoController {
     @RequestMapping("/findEmployeePreview")
     public PageInfo findUserInfoPreview(@RequestParam(required = false,defaultValue = "1",value = "pageNum") Integer pageNum,
                                         @RequestParam(required = false,defaultValue = "10",value = "pageSize") Integer pageSize,
-                                        String username, Integer groupId){
-        PageInfo pageInfo =userInfoService.findUserInfoPreview(pageNum, pageSize, username, groupId);
+                                        @RequestParam(required = false,defaultValue = "0",value = "type") Integer type,
+                                        String username, Integer groupId ){
+        PageInfo pageInfo =userInfoService.findUserInfoPreview(pageNum, pageSize, type, username, groupId);
         return pageInfo;
     }
 
@@ -85,6 +88,12 @@ public class UserInfoController {
         return userInfoDetail;
     }
 
+    /**
+     * 添加员工
+     * @param alfUserLibrary 人脸库用户信息
+     * @param userInfo 用户信息
+     * @return
+     */
     @RequestMapping("/addEmployee")
     public String addEmployee(AlfUserLibrary alfUserLibrary, UserInfo userInfo){
         Integer id = alfService.addStaff(alfUserLibrary);
@@ -99,6 +108,12 @@ public class UserInfoController {
         return "成功";
     }
 
+    /**
+     * 修改员工信息
+     * @param alfUserLibrary 人脸库用户信息
+     * @param userInfo 用户信息
+     * @return
+     */
     @RequestMapping("/updateEmployee")
     public String updateEmployee(AlfUserLibrary alfUserLibrary, UserInfo userInfo){
         int n0 = 1;
