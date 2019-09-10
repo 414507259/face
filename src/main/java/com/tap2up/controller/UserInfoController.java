@@ -77,7 +77,7 @@ public class UserInfoController {
     public PageInfo findUserInfoPreview(@RequestParam(required = false,defaultValue = "1",value = "pageNum") Integer pageNum,
                                         @RequestParam(required = false,defaultValue = "10",value = "pageSize") Integer pageSize,
                                         @RequestParam(required = false,defaultValue = "0",value = "type") Integer type,
-                                        String username, Integer groupId ){
+                                            String username, Integer groupId ){
         PageInfo pageInfo =userInfoService.findUserInfoPreview(pageNum, pageSize, type, username, groupId);
         return pageInfo;
     }

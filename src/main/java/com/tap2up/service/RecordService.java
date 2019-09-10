@@ -16,13 +16,18 @@ import java.util.Map;
  * Created with IntelliJ IDEA.
  * User: 张雪彬
  * Date: 2019/08/26 15:51
- * Description:
+ * Description: 用于处理通勤信息的逻辑
  * Version: V1.0
  */
 @Service
 public class RecordService {
+
+    private final RecordMapper recordMapper;
+
     @Autowired
-    private RecordMapper recordMapper;
+    public RecordService(RecordMapper recordMapper) {
+        this.recordMapper = recordMapper;
+    }
 
     /**
      *   添加打卡记录
@@ -35,6 +40,10 @@ public class RecordService {
         return recordMapper.insertSelective(record);
     }
 
+    /**
+     * 获取用户通勤信息
+     * @return
+     */
     public MyModel getRecord(Integer currentPage, Integer pageSize,Long beginTime,Long endTime,Integer type,
                           String group,String name){
         if (beginTime != null && beginTime.equals(endTime)){

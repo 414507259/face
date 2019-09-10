@@ -37,6 +37,8 @@ public class GroupController {
         System.out.println(group);
         if (i > 0){
             return new MyModel("200","添加成功");
+        }else if (i == -1){
+            return new MyModel("-1","组名重复");
         }
         return new MyModel("-1","添加失败");
     }
@@ -44,7 +46,8 @@ public class GroupController {
 
     /**
      * 查询所有用户组
-     * @return
+     * type 用户组类型
+     * @return 用户组信息
      */
     @RequestMapping(value = "selectGroup")
     @ResponseBody

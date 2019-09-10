@@ -37,12 +37,17 @@ public class AlfController {
         return null;
     }
 
+    /**
+     * 添加人脸库
+     * @param library
+     * @return
+     */
     @RequestMapping(value = "add/staff")
     @ResponseBody
     public AlfModel addStaff(AlfUserLibrary library){
         int i = alfService.addStaff(library);
         if (i > 0){
-            return new AlfModel("0",library.getId()+"");
+            return new AlfModel("0",i+"");
         }else {
             return new AlfModel("-2","人员 id 不可用");
         }
