@@ -85,7 +85,7 @@ public class UserInfoController {
     /**
      * 通过人脸库用户id查找员工详细信息
      * @param id 人脸库用户id
-     * @return
+     * @return 员工详细信息
      */
     @RequestMapping("/findEmployeeDetailById")
     public Map findUserInfoDetailById(Integer id, Integer type){
@@ -97,16 +97,21 @@ public class UserInfoController {
      * 添加员工
      * @param alfUserLibrary 人脸库用户信息
      * @param userInfo 用户信息
-     * @return
+     * @return 是否成功
      */
     @RequestMapping("/addEmployee")
     public String addEmployee(AlfUserLibrary alfUserLibrary, UserInfo userInfo){
+        //从身份证号码中解析出生日和年龄
         String idNumber = alfUserLibrary.getIdnumber();
         if(idNumber != null && idNumber.length() >= 15){
             Map<String, String> idInfo = IdCardUtil.getBirAgeSex(idNumber);
             alfUserLibrary.setBirthday(idInfo.get("birthday"));
             userInfo.setAge(Integer.parseInt(idInfo.get("age")));
         }
+        //通过用户组名获取用户组id
+        String groupName = alfUserLibrary.getGroupname();
+        Integer groupId = userInfoService.findGroupIdByGroupName(groupName);
+        alfUserLibrary.setGroupid(groupId);
         Integer id = alfService.addStaff(alfUserLibrary);
         if(id == null){
             return "失败";
@@ -123,16 +128,35 @@ public class UserInfoController {
      * 修改员工信息
      * @param alfUserLibrary 人脸库用户信息
      * @param userInfo 用户信息
-     * @return
+     * @return 是否成功
      */
     @RequestMapping("/updateEmployee")
     public String updateEmployee(AlfUserLibrary alfUserLibrary, UserInfo userInfo){
+        //通过用户组名获取用户组id
+        String groupName = alfUserLibrary.getGroupname();
+        Integer groupId = userInfoService.findGroupIdByGroupName(groupName);
+        alfUserLibrary.setGroupid(groupId);
         int n0 = alfService.updateAlf(alfUserLibrary);
         int n1 = userInfoService.updateUserInfo(userInfo);
         if(n0 < 1){
             return "失败";
         }
         if(n1 < 1){
+            return "失败";
+        }
+        return "成功";
+    }
+
+    /**
+     * 删除员工 （假删除）
+     * @param userInfo 员工信息 （只需要infoId）
+     * @return 是否成功
+     */
+    @RequestMapping("/deleteEmployee")
+    public String deleteEmployee(UserInfo userInfo){
+        userInfo.setIsdelete(1);
+        int n = userInfoService.updateUserInfo(userInfo);
+        if(n < 1){
             return "失败";
         }
         return "成功";

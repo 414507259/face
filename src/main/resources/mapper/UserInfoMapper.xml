@@ -59,6 +59,10 @@
     </if>
     and alf._id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="findGroupIdByGroupName" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select _id from _group
+    where groupName = #{groupName,jdbcType=VARCHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from userInfo
     where infoId = #{infoid,jdbcType=INTEGER}

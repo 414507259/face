@@ -52,6 +52,7 @@ public class UserController {
                 Users user = (Users)currentUser.getPrincipal();
                 user.setLogintime(new Date());
                 userService.update(user);
+                user.setPassword(null);
                 return ResultUtil.success(user);
             } catch (IncorrectCredentialsException ice) {
                 return ResultUtil.error(101,"用户名/密码不匹配！");

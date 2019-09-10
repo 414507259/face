@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.tap2up.mapper.UserInfoMapper;
 import com.tap2up.pojo.UserInfo;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,5 +39,9 @@ public class UserInfoService {
 
     public Map findUserInfoDetailById(Integer id, Integer type) {
         return userInfoMapper.findUserInfoDetailById(id, type);
+    }
+
+    public Integer findGroupIdByGroupName(String groupName) {
+        return userInfoMapper.findGroupIdByGroupName(groupName);
     }
 }
