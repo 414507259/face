@@ -127,7 +127,7 @@ public class UserInfoController {
      */
     @RequestMapping("/updateEmployee")
     public String updateEmployee(AlfUserLibrary alfUserLibrary, UserInfo userInfo){
-        int n0 = 1;
+        int n0 = alfService.updateAlf(alfUserLibrary);
         int n1 = userInfoService.updateUserInfo(userInfo);
         if(n0 < 1){
             return "失败";
