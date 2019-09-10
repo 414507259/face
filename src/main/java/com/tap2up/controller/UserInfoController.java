@@ -5,6 +5,7 @@ import com.tap2up.pojo.AlfUserLibrary;
 import com.tap2up.pojo.UserInfo;
 import com.tap2up.service.AlfService;
 import com.tap2up.service.UserInfoService;
+import com.tap2up.utils.IdCardUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 @RequestMapping("/userInfo")
@@ -97,6 +101,12 @@ public class UserInfoController {
      */
     @RequestMapping("/addEmployee")
     public String addEmployee(AlfUserLibrary alfUserLibrary, UserInfo userInfo){
+        String idNumber = alfUserLibrary.getIdnumber();
+        if(idNumber != null && idNumber.length() >= 15){
+            Map<String, String> idInfo = IdCardUtil.getBirAgeSex(idNumber);
+            alfUserLibrary.setBirthday(idInfo.get("birthday"));
+            userInfo.setAge(Integer.parseInt(idInfo.get("age")));
+        }
         Integer id = alfService.addStaff(alfUserLibrary);
         if(id == null){
             return "失败";

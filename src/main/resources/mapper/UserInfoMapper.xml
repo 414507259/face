@@ -27,7 +27,7 @@
     and isDelete = 0
   </select>
   <select id="findUserInfoPreview" parameterType="java.lang.Integer" resultType="java.util.Map">
-    select alf.userName, alf.birthDay, alf.userValidStartTime, alf.userValidEndTime, info.gender,info.tel,info.email,g.groupName
+    select alf._id, alf.userName, alf.birthDay, alf.userValidStartTime, alf.userValidEndTime, info.gender,info.tel,info.email,g.groupName
     from alfuserlibrary alf
     left join userInfo info
     on alf._id = info._id
