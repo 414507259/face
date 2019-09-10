@@ -88,8 +88,8 @@ public class UserInfoController {
      * @return
      */
     @RequestMapping("/findEmployeeDetailById")
-    public Map findUserInfoDetailById(Integer id){
-        Map userInfoDetail = userInfoService.findUserInfoDetailById(id);
+    public Map findUserInfoDetailById(Integer id, Integer type){
+        Map userInfoDetail = userInfoService.findUserInfoDetailById(id, type);
         return userInfoDetail;
     }
 

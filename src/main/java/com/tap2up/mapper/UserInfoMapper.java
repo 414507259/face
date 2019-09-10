@@ -21,5 +21,5 @@ public interface UserInfoMapper {
 
     List<Map> findUserInfoPreview(@Param("type") Integer type, @Param("username") String username, @Param("groupId") Integer groupId);
 
-    Map findUserInfoDetailById(Integer id);
+    Map findUserInfoDetailById(@Param("id") Integer id, @Param("type") Integer type);
 }

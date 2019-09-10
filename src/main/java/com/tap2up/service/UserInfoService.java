@@ -36,7 +36,7 @@ public class UserInfoService {
         return pageInfo;
     }
 
-    public Map findUserInfoDetailById(Integer id) {
-        return userInfoMapper.findUserInfoDetailById(id);
+    public Map findUserInfoDetailById(Integer id, Integer type) {
+        return userInfoMapper.findUserInfoDetailById(id, type);
     }
 }

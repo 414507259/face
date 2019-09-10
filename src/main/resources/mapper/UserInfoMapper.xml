@@ -45,7 +45,7 @@
     </if>
   </select>
   <select id="findUserInfoDetailById" parameterType="java.lang.Integer" resultType="java.util.Map">
-    select alf.icNumber,alf.idNumber,alf.type,alf.userName,alf.birthDay,alf.prompt,
+    select alf._id, alf.icNumber,alf.idNumber,alf.type,alf.userName,alf.birthDay,alf.prompt,
     info.gender,info.tel,info.workNumber,info.email,info.workingPlace,info.age,info.hireDate,info.description,
     g.groupName
     from alfuserlibrary alf
@@ -54,8 +54,10 @@
     left join _group g
     on alf.groupId = g._id
     where info.isDelete = 0
-    and alf.type = 0
-    and alf._id = #{id}
+    <if test="type != null and type != 0">
+      and alf.type = #{type,jdbcType=INTEGER}
+    </if>
+    and alf._id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from userInfo
