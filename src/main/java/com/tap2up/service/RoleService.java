@@ -2,6 +2,7 @@ package com.tap2up.service;
 
 import com.tap2up.mapper.RoleMapper;
 import com.tap2up.pojo.Role;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,5 +53,13 @@ public class RoleService {
             allRoles.remove(role);
         }
         return allRoles;
+    }
+
+    public Integer findRidByRoleName(String roleName){
+        return roleMapper.selectRoleIdByRoleName(roleName);
+    }
+
+    public int isRelationExisted(Integer roleId, Integer userId) {
+        return roleMapper.isRelationExisted(roleId, userId);
     }
 }

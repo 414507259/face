@@ -27,4 +27,8 @@ public interface RoleMapper {
     List<Role> findRoleByUid(int uId);
 
     List<Role> selectAll();
+
+    Integer selectRoleIdByRoleName(String roleName);
+
+    int isRelationExisted(@Param("roleId") Integer roleId, @Param("userId") Integer userId);
 }

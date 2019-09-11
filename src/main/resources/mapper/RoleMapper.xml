@@ -30,8 +30,13 @@
     on r.roleId = ur.roleId
     inner join users u
     on u.userid = ur.userId
-    where u.username = #{username}
+    where u.username = #{username,jdbcType=VARCHAR}
     and r.isDelete = 0
+  </select>
+  <select id="selectRoleIdByRoleName" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select roleId from role
+    where roleName = #{roleName,jdbcType=VARCHAR}
+    and isDelete = 0
   </select>
   <select id="selectByRid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select pm.* from permission pm
@@ -48,6 +53,11 @@
     on ur.roleId = r.roleId
     where u.userId = #{uId}
     and r.isDelete = 0
+  </select>
+  <select id="isRelationExisted" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(userId) from user_role
+    where userId = #{userId,jdbcType=VARCHAR}
+    and roleId = #{roleId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from role

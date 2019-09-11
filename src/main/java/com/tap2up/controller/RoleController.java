@@ -24,7 +24,7 @@ public class RoleController {
      * 给角色添加权限
      * @param pmIds 权限id列表
      * @param rId 角色id
-     * @return
+     * @return 是否成功
      */
     @RequestMapping("/addPermissions")
     public String addPermissions(@RequestBody List<Integer> pmIds, int rId){
@@ -37,9 +37,9 @@ public class RoleController {
 
     /**
      * 删除角色的权限
-     * @param pmIds
-     * @param rId
-     * @return
+     * @param pmIds 权限id列表
+     * @param rId 角色id
+     * @return 是否成功
      */
     @RequestMapping("/deletePermissions")
     public String deletePermissions(@RequestBody List<Integer> pmIds, int rId){
@@ -54,7 +54,7 @@ public class RoleController {
     /**
      * 添加角色
      * @param role 角色id
-     * @return
+     * @return 是否成功
      */
     @RequestMapping("/addRole")
     public String addRole(Role role){
@@ -68,7 +68,7 @@ public class RoleController {
     /**
      * 修改角色
      * @param role 角色
-     * @return
+     * @return 是否成功
      */
     @RequestMapping("/updateRole")
     public String updateRole(Role role){
@@ -83,12 +83,12 @@ public class RoleController {
     /**
      * 通过用户id查找角色
      * @param uId 用户id
-     * @return
+     * @return 角色列表
      */
     @RequestMapping("/findRoleByUid")
     public List<Role> findRoleByUid(int uId){
         List<Role> roleList = roleService.findRoleByUid(uId);
-        if(roleList.size() == 0 || roleList == null){
+        if(roleList.size() == 0){
             return null;
         }
         return roleList;
@@ -97,7 +97,7 @@ public class RoleController {
     /**
      * 删除角色 （假删除）
      * @param role 角色
-     * @return
+     * @return 是否成功
      */
     @RequestMapping("/deleteRole")
     public String deleteRole(Role role){
@@ -110,13 +110,21 @@ public class RoleController {
     }
 
     /**
-     * 通过用户id查找改用户未拥有的角色
+     * 通过用户id查找该用户未拥有的角色
      * @param uId 用户id
-     * @return
+     * @return 该用户未拥有的角色列表
      */
     @RequestMapping("/findRestRoleByUid")
     public List<Role> findRestRoleByUid(int uId){
-        List<Role> restRoles = roleService.findRestRoleByUid(uId);
-        return restRoles;
+        return roleService.findRestRoleByUid(uId);
+    }
+
+    /**
+     * 查找所有角色
+     * @return 角色列表
+     */
+    @RequestMapping("/findAll")
+    public List<Role> findAll(){
+        return roleService.findAll();
     }
 }

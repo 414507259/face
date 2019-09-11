@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,8 +39,9 @@ public class UserService {
      * 注册用户
      * @param users 用户信息
      */
-    public void regUser(Users users){
+    public Integer regUser(Users users){
         usersMapper.insertSelective(users);
+        return users.getUserid();
     }
 
     /**
@@ -78,5 +80,14 @@ public class UserService {
      */
     public Users getUserById(int uId) {
         return usersMapper.selectByPrimaryKey(uId);
+    }
+
+
+    public int deleteRelation(Integer userId) {
+        return usersMapper.deleteRelation(userId);
+    }
+
+    public List<Map> findAlfAndInfoByUid(Integer userId) {
+        return usersMapper.selectAlfAndInfoByUid(userId);
     }
 }

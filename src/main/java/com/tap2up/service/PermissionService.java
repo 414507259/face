@@ -32,4 +32,8 @@ public class PermissionService {
     public int updatePermission(Permission permission) {
         return permissionMapper.updateByPrimaryKeySelective(permission);
     }
+
+    public List<Permission> findAllPermission(){
+        return permissionMapper.selectAll();
+    }
 }

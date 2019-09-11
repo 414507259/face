@@ -75,8 +75,12 @@ public class UserRealm extends AuthorizingRealm {
             SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
             for (Role roleInfo : roleList) {
                 info.addRole(roleInfo.getRolename());
-                permissionList = permissionService.findPermissionsByRoleName(roleInfo
-                        .getRolename());
+                if(roleInfo.getRolename().equals("超级管理员")){
+                    permissionList = permissionService.findAllPermission();
+                } else {
+                    permissionList = permissionService.findPermissionsByRoleName(roleInfo
+                            .getRolename());
+                }
                 for (Permission permissionInfo : permissionList) {
                     if(permissionInfo == null){
                         continue;

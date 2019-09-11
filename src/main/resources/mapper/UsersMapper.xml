@@ -14,7 +14,7 @@
   <sql id="Base_Column_List">
     userId, username, password, logintime, endtime, auth, _id, isDelete
   </sql>
-  <select id="getUser" resultType="com.tap2up.pojo.Users">
+  <select id="getUser" resultMap="BaseResultMap">
     SELECT
     <include refid="Base_Column_List" />
     FROM users where username = #{username}
@@ -26,6 +26,21 @@
     from users
     where userId = #{userid,jdbcType=INTEGER}
     and isDelete = 0
+  </select>
+  <select id="selectAlfAndInfoByUid" parameterType="java.lang.Integer" resultType="java.util.Map">
+    select u.userId, u.username, u.logintime, u.endtime,
+    alf._id, alf.idNumber, alf.userName as realName, alf.birthDay, alf.groupName,
+    info.infoId, info.gender, info.tel, info.age, info.email
+    from users u
+    left join alfuserlibrary alf
+    on u._id = alf._id
+    left join userInfo info
+    on u._id = info._id
+    where u.isDelete = 0
+    and info.isDelete = 0
+    <if test="userId != null and userId != ''">
+      and u.userId = #{userId,jdbcType=INTEGER}
+    </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from users
@@ -41,6 +56,10 @@
       )
     </foreach>
   </delete>
+  <delete id="deleteRelation" parameterType="java.lang.Integer">
+    delete from user_role
+    where userId = #{userId,jdbcType=VARCHAR}
+  </delete>
   <insert id="insert" parameterType="com.tap2up.pojo.Users">
     insert into users (userId, username, password, 
       logintime, endtime, auth, 
@@ -49,7 +68,8 @@
       #{logintime,jdbcType=TIMESTAMP}, #{endtime,jdbcType=TIMESTAMP}, #{auth,jdbcType=VARCHAR}, 
       #{id,jdbcType=INTEGER}, #{isdelete,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.tap2up.pojo.Users">
+  <insert id="insertSelective" parameterType="com.tap2up.pojo.Users" useGeneratedKeys="true" keyProperty="userid"
+          keyColumn="userId">
     insert into users
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userid != null">

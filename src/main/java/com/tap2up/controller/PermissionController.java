@@ -22,7 +22,7 @@ public class PermissionController {
     /**
      * 添加权限
      * @param permission 权限
-     * @return
+     * @return 是否成功
      */
     @RequestMapping("/addPermission")
     public String addPermission(Permission permission){
@@ -36,12 +36,12 @@ public class PermissionController {
     /**
      * 通过角色id查找权限
      * @param rId 角色id
-     * @return
+     * @return 权限列表
      */
     @RequestMapping("/findPermissionByRid")
     public List<Permission> findPermissionByRid(int rId){
         List<Permission> permissionList = permissionService.findPermissionByRid(rId);
-        if(permissionList.size() ==0 || permissionList == null){
+        if(permissionList.size() == 0){
             return null;
         }
         return permissionList;
@@ -49,8 +49,8 @@ public class PermissionController {
 
     /**
      * 修改权限
-     * @param permission
-     * @return
+     * @param permission 权限
+     * @return 是否成功
      */
     @RequestMapping("/updatePermission")
     public String updatePermission(Permission permission){
@@ -64,7 +64,7 @@ public class PermissionController {
     /**
      * 删除权限（假删除）
      * @param permission 权限
-     * @return
+     * @return 是否成功
      */
     @RequestMapping("/deletePermission")
     public String deletePermission(Permission permission){

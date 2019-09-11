@@ -6,17 +6,11 @@ import com.tap2up.pojo.UserInfo;
 import com.tap2up.service.AlfService;
 import com.tap2up.service.UserInfoService;
 import com.tap2up.utils.IdCardUtil;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 
 @RequestMapping("/userInfo")
@@ -29,17 +23,10 @@ public class UserInfoController {
     @Autowired
     private AlfService alfService;
 
-    @RequiresPermissions("test")
-    @RequestMapping("/test")
-    @ResponseBody
-    public String test(){
-        return "test";
-    }
-
     /**
      * 添加用户信息
      * @param userInfo 用户信息
-     * @return
+     * @return 是否成功
      */
     @RequestMapping("/addUserInfo")
     public String addUserInfo(UserInfo userInfo){
@@ -52,8 +39,8 @@ public class UserInfoController {
 
     /**
      * 修改用户信息
-     * @param userInfo
-     * @return
+     * @param userInfo 用户信息
+     * @return 是否成功
      */
     @RequestMapping("/updateUserInfo")
     public String updateUserInfo(UserInfo userInfo){
@@ -71,15 +58,14 @@ public class UserInfoController {
      * @param type 用户类型
      * @param username 用户姓名
      * @param groupId 组id
-     * @return
+     * @return 分页后的信息
      */
     @RequestMapping("/findEmployeePreview")
     public PageInfo findUserInfoPreview(@RequestParam(required = false,defaultValue = "1",value = "pageNum") Integer pageNum,
                                         @RequestParam(required = false,defaultValue = "10",value = "pageSize") Integer pageSize,
                                         @RequestParam(required = false,defaultValue = "0",value = "type") Integer type,
                                             String username, Integer groupId ){
-        PageInfo pageInfo =userInfoService.findUserInfoPreview(pageNum, pageSize, type, username, groupId);
-        return pageInfo;
+        return userInfoService.findUserInfoPreview(pageNum, pageSize, type, username, groupId);
     }
 
     /**
@@ -89,8 +75,7 @@ public class UserInfoController {
      */
     @RequestMapping("/findEmployeeDetailById")
     public Map findUserInfoDetailById(Integer id, Integer type){
-        Map userInfoDetail = userInfoService.findUserInfoDetailById(id, type);
-        return userInfoDetail;
+        return userInfoService.findUserInfoDetailById(id, type);
     }
 
     /**
@@ -113,7 +98,7 @@ public class UserInfoController {
         Integer groupId = userInfoService.findGroupIdByGroupName(groupName);
         alfUserLibrary.setGroupid(groupId);
         Integer id = alfService.addStaff(alfUserLibrary);
-        if(id == null){
+        if(id < 0){
             return "失败";
         }
         userInfo.setId(id);

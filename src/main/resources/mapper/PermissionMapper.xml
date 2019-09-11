@@ -16,6 +16,11 @@
     permissionId, permissionName, resourceType, parentId, parentIds, permission, url, 
     isAvailable, isDelete
   </sql>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from permission
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -28,9 +33,9 @@
     p.*
     from permission p
     inner join role_permission rp
-    on p.permissionId = rp.permission_id
+    on p.permissionId = rp.permissionId
     inner join role r
-    on r.roleId = rp.role_id
+    on r.roleId = rp.roleId
     where r.roleName = #{rolename}
     and p.isDelete = 0
   </select>

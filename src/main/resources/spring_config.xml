@@ -184,9 +184,8 @@ http://www.springframework.org/schema/context/spring-context.xsd http://www.spri
                 比如拦截了登录方法,或者登录页面,那就无法登录了,所以登录页面和方法要开放-->
                 /login.html = anon  <!--登录页面-->
                 /login.jsp = anon    <!--登录页面-->
-                /login.do = anon          <!--登录方法-->
+                /user/login.do = anon          <!--登录方法-->
                 /loginUser =anon   <!--登录方法-->
-                /reg.do = anon
                 /js/** = anon
                 /lib/** = anon
                 /css/** = anon
@@ -197,7 +196,8 @@ http://www.springframework.org/schema/context/spring-context.xsd http://www.spri
                 /record/* = anon
                 /alf/** = anon
                 /logout = logout
-                /test.do = perms[test]
+                /user/** = perms[account]
+                /userInfo/** = perms[person]
                 /** = authc
                 <!--      //*.html = authc  -->  <!--拦截所有以html结尾的文件
             这里要放在最后面 因为是从上往下按顺序走-->
