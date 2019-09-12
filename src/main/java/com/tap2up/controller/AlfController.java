@@ -1,5 +1,7 @@
 package com.tap2up.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.tap2up.pojo.AlfUserLibrary;
 import com.tap2up.service.AlfService;
 import com.tap2up.utils.AlfModel;
@@ -33,29 +35,12 @@ public class AlfController {
 
     @RequestMapping(value = "login")
     @ResponseBody
-    public String login(String data) throws Exception {
-
-        String str = EncryptUtils.Decrypt(data,"fbe47880b9171706");
-        System.out.println(str);
+    public String login(String account,String password) throws Exception {
+        System.out.println(account);
+        System.out.println(password);
         return null;
     }
 
-
-    // 解密
-    public static String getFromBase64(String s) {
-        byte[] b = null;
-        String result = null;
-        if (s != null) {
-            BASE64Decoder decoder = new BASE64Decoder();
-            try {
-                b = decoder.decodeBuffer(s);
-                result = new String(b, "utf-8");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return result;
-    }
 
     /**
      * 添加人脸库
