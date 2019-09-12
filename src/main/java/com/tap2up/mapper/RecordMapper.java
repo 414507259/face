@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 public interface RecordMapper {
+
+
+    int getTodayCount(@Param("beginTime") Long beginTime, @Param("endTime") Long endTime,@Param("type") Integer type);
+
     List<Map<String,Object>> getRecord(@Param("beginTime") Long beginTime, @Param("endTime") Long endTime,
                         @Param("type") Integer type, @Param("group") String group, @Param("name") String name);
 

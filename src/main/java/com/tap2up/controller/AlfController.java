@@ -3,13 +3,14 @@ package com.tap2up.controller;
 import com.tap2up.pojo.AlfUserLibrary;
 import com.tap2up.service.AlfService;
 import com.tap2up.utils.AlfModel;
-import com.tap2up.utils.FileUtil;
+import com.tap2up.utils.EncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Decoder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -32,9 +33,28 @@ public class AlfController {
 
     @RequestMapping(value = "login")
     @ResponseBody
-    public String login(){
+    public String login(String data) throws Exception {
 
+        String str = EncryptUtils.Decrypt(data,"fbe47880b9171706");
+        System.out.println(str);
         return null;
+    }
+
+
+    // 解密
+    public static String getFromBase64(String s) {
+        byte[] b = null;
+        String result = null;
+        if (s != null) {
+            BASE64Decoder decoder = new BASE64Decoder();
+            try {
+                b = decoder.decodeBuffer(s);
+                result = new String(b, "utf-8");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
     /**
@@ -76,13 +96,13 @@ public class AlfController {
     @RequestMapping(value = "image/uploading")
     @ResponseBody
     public AlfModel fileupload(MultipartFile pic, HttpServletRequest request) throws IOException {
-        String fileName = pic.getOriginalFilename();
-        String suffix = fileName.substring(fileName.lastIndexOf("."));
-        if (suffix.equalsIgnoreCase(".png") || suffix.equalsIgnoreCase(".jpg")) {
-            String path = FileUtil.inputFile(suffix, pic, request);
-            return new AlfModel("200","上传成功:");
-        } else {
-            return new AlfModel("-1", "图片格式不正确");
+        if (pic == null){
+            return new AlfModel("-1","图片为空");
         }
+        String str = alfService.fileupload(pic,request);
+        if ("图片格式不正确".equals(str)){
+            return new AlfModel("-1","图片格式不正确");
+        }
+        return new AlfModel("0","ok");
     }
 }

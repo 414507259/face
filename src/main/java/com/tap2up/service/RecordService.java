@@ -8,9 +8,9 @@ import com.tap2up.utils.MyModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.security.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -88,5 +88,39 @@ public class RecordService {
         Long total = pageInfo.getTotal(); //获取总记录数
         MyModel myModel = new MyModel("200",""+total,list);
         return myModel;
+    }
+
+    /**
+     * 获取近7天的通勤总计
+     * @return
+     */
+    public List<Map> statistics(){
+        Long  time = System.currentTimeMillis();  //当前时间的时间戳
+        List<Map> list = new ArrayList<>();
+        long zero = time/(1000*3600*24)*(1000*3600*24) - TimeZone.getDefault().getRawOffset()+60*60*24*1000;
+        for (int i = 0; i < 7; i++) {
+            long time2 = zero - 60*60*24*1000;
+            int a  = recordMapper.getTodayCount(time2,zero,null);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date(time2);
+            String res = simpleDateFormat.format(date);
+            Map map = new HashMap();
+            map.put("date",res);
+            map.put("data",a);
+            list.add(map);
+            zero = time2;
+        }
+        return list;
+    }
+
+
+    public Map count(){
+        int a  = recordMapper.getTodayCount(0L,9999999999999L,null);
+        int b  = recordMapper.getTodayCount(0L,9999999999999L,2);
+        List<Map> list = new ArrayList<>();
+        Map map = new HashMap();
+        map.put("count",a);
+        map.put("count2",b);
+        return map;
     }
 }

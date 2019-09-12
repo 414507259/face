@@ -18,16 +18,10 @@ import java.util.UUID;
 public class FileUtil {
 
     public static String inputFile(String suffix,MultipartFile userHead, HttpServletRequest request) throws IOException {
-//        String uploadPath = request.getContextPath() + File.separator  + File.separator;
-//        System.out.println("============"+uploadPath+"=====");
-        //判断上传文件类型
-
             String uuid = getUUID();
             String str = request.getServletContext().getRealPath("");
-        System.out.println(str);
-//            System.out.println(str.lastIndexOf(File.separator));
 //        str.substring(0, str.lastIndexOf("ROOT")) +
-            str = str.substring(0, str.lastIndexOf("face_war")) +"file" + File.separator;
+            str = str.substring(0, str.lastIndexOf("face")) +"file" + File.separator;
 //            System.out.println(str);
             String path = str + uuid + suffix;
 //            String path2 = "file/" + uuid + suffix;

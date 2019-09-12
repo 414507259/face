@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created with IntelliJ IDEA.
  * User: 张雪彬
@@ -95,4 +98,20 @@ public class RecordController {
         return new MyModel("200","删除成功");
     }
 
+    /**
+     * 获取控制台需要展示的统计信息
+     * @return
+     */
+    @RequestMapping(value = "statistics")
+    @ResponseBody
+    public List<Map> statistics(){
+        System.out.println(System.currentTimeMillis());
+        return recordService.statistics();
+    }
+
+    @RequestMapping(value = "count")
+    @ResponseBody
+    public Map count(){
+        return recordService.count();
+    }
 }
