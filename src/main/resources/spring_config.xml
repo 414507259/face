@@ -217,6 +217,8 @@ http://www.springframework.org/schema/context/spring-context.xsd http://www.spri
 
     <!-- 安全管理器 -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="cacheManager" ref="cacheManager"/>
+        <property name="sessionManager" ref="sessionManager"/>
         <property name="realm" ref="MyShiroRealm"/>
     </bean>
 
@@ -231,8 +233,22 @@ http://www.springframework.org/schema/context/spring-context.xsd http://www.spri
                  <property name="hashIterations" value="11"/>
              </bean>
          </property>
-         <!--关闭认证缓存-->
-         <property name="AuthenticationCachingEnabled" value="false"></property>
+        <property name="cachingEnabled" value="true"/>
+        <property name="authenticationCachingEnabled" value="true"/>
+        <property name="authenticationCacheName" value="authenticationCache"/>
+        <property name="authorizationCachingEnabled" value="true"/>
+        <property name="authorizationCacheName" value="authorizationCache"/>
+    </bean>
+
+    <!--通过session会话来管理缓存,开启sessionIdCookieEnabled-->
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="sessionIdCookieEnabled" value="true"/>
+    </bean>
+
+    <!--缓存管理器-->
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
+
     </bean>
 
 
