@@ -37,7 +37,6 @@
     left join userInfo info
     on u._id = info._id
     where u.isDelete = 0
-    and info.isDelete = 0
     <if test="userId != null and userId != ''">
       and u.userId = #{userId,jdbcType=INTEGER}
     </if>
