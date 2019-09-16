@@ -28,7 +28,7 @@
     and isDelete = 0
   </select>
   <select id="selectAlfAndInfoByUid" parameterType="java.lang.Integer" resultType="java.util.Map">
-    select u.userId, u.username, u.logintime, u.endtime,
+    select u.userId, u.username, u.logintime, u.endtime, u.auth,
     alf._id, alf.idNumber, alf.userName as realName, alf.birthDay, alf.groupName,
     info.infoId, info.gender, info.tel, info.age, info.email
     from users u
