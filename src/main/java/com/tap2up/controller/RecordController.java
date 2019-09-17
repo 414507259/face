@@ -22,13 +22,17 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "record")
 public class RecordController {
+    private final RecordService recordService;
+
     @Autowired
-    private RecordService recordService;
+    public RecordController(RecordService recordService) {
+        this.recordService = recordService;
+    }
 
     /**
      * 上传通勤记录
-     * @param record
-     * @return
+     * @param record 记录对象
+     * @return 数据
      */
     @RequestMapping(value = "addRecord")
     @ResponseBody
@@ -64,7 +68,7 @@ public class RecordController {
      * @param type 类型
      * @param group 组
      * @param name 用户名
-     * @return
+     * @return 查询的数据
      */
     @RequestMapping(value = "getUserStatistics")
     @ResponseBody
@@ -77,7 +81,7 @@ public class RecordController {
     /**
      * 删除记录
      * @param id 主键
-     * @return
+     * @return 删除结果
      */
     @RequestMapping(value = "deleteRecord")
     @ResponseBody
@@ -89,7 +93,7 @@ public class RecordController {
     /**
      * 批量删除记录
      * @param id 主键数组
-     * @return
+     * @return 删除结果
      */
     @RequestMapping(value = "deleteRecords")
     @ResponseBody
@@ -100,7 +104,7 @@ public class RecordController {
 
     /**
      * 获取控制台需要展示的统计信息
-     * @return
+     * @return 统计结果
      */
     @RequestMapping(value = "statistics")
     @ResponseBody

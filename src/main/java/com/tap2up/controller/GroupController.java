@@ -14,21 +14,25 @@ import java.util.List;
  * Created with IntelliJ IDEA.
  * User: 张雪彬
  * Date: 2019/09/05 14:56
- * Description:
+ * Description: 用于用户组管理
  * Version: V1.0
  */
 @Controller
 @RequestMapping(value = "group")
 public class GroupController {
 
+    private final GroupService groupService;
+
     @Autowired
-    private GroupService groupService;
+    public GroupController(GroupService groupService) {
+        this.groupService = groupService;
+    }
 
 
     /**
      * 添加用户组
-     * @param group
-     * @return
+     * @param group 用户组对象
+     * @return 添加结果
      */
     @RequestMapping(value = "insertGroup")
     @ResponseBody
@@ -52,7 +56,7 @@ public class GroupController {
     @RequestMapping(value = "selectGroup")
     @ResponseBody
     public MyModel selectGroup(String type){
-        if (type == ""){
+        if (type.equals("")){
             type = null;
         }
         List list = groupService.selectGroup(type);
@@ -64,8 +68,8 @@ public class GroupController {
 
     /**
      * 修改用户组
-     * @param group
-     * @return
+     * @param group 用户组对象
+     * @return 修改结果
      */
     @RequestMapping(value = "updateGroup")
     @ResponseBody
@@ -80,7 +84,7 @@ public class GroupController {
     /**
      * 删除用户组
      * @param id 主键
-     * @return
+     * @return 删除结果
      */
     @RequestMapping(value = "deleteGroup")
     @ResponseBody

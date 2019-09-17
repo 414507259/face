@@ -1,6 +1,7 @@
 package com.tap2up.service;
 
 import com.tap2up.mapper.AlfUserLibraryMapper;
+import com.tap2up.mapper.ConfigMapper;
 import com.tap2up.mapper.ImageMapper;
 import com.tap2up.pojo.AlfUserLibrary;
 import com.tap2up.pojo.Image;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,11 +26,13 @@ public class AlfService {
 
     private final AlfUserLibraryMapper mapper;
     private ImageMapper imageMapper;
+    private ConfigMapper configMapper;
 
     @Autowired
-    public AlfService(AlfUserLibraryMapper mapper, ImageMapper imageMapper) {
+    public AlfService(AlfUserLibraryMapper mapper, ImageMapper imageMapper, ConfigMapper configMapper) {
         this.mapper = mapper;
         this.imageMapper = imageMapper;
+        this.configMapper = configMapper;
     }
 
     /**
@@ -47,8 +51,8 @@ public class AlfService {
 
     /**
      *  根据用户id获取用户信息
-     * @param userId
-     * @return
+     * @param userId 主键
+     * @return 查询结果
      */
     public AlfUserLibrary getAlfUserLibrary(int userId){
         return mapper.getAlfUserLibrarybyUserId(userId);
@@ -57,8 +61,8 @@ public class AlfService {
 
     /**
      * 编辑用户
-     * @param alfUserLibrary
-     * @return
+     * @param alfUserLibrary 人脸库对象
+     * @return 结果
      */
     public int updateAlf(AlfUserLibrary alfUserLibrary){
         Long time = System.currentTimeMillis();
@@ -70,8 +74,8 @@ public class AlfService {
     /**
      * 文件上传
      * @param pic 图片
-     * @param request
-     * @return
+     * @param request request
+     * @return mid
      * @throws IOException
      */
     public String fileupload(MultipartFile pic, HttpServletRequest request) throws IOException {
@@ -89,5 +93,10 @@ public class AlfService {
         } else {
             return  "图片格式不正确";
         }
+    }
+
+    public Map config(String deviceSn){
+        Map map = configMapper.getConfig(deviceSn);
+        return map;
     }
 }

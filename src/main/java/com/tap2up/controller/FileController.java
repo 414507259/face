@@ -2,9 +2,6 @@ package com.tap2up.controller;
 
 import com.tap2up.service.AlfService;
 import com.tap2up.utils.BASE64DecodedMultipartFile;
-import com.tap2up.utils.FileUtil;
-import com.tap2up.utils.MyModel;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,7 +19,7 @@ import java.io.IOException;
  */
 @Controller
 public class FileController {
-    final AlfService alfService ;
+    private final AlfService alfService ;
 
     public FileController(AlfService alfService) {
         this.alfService = alfService;
@@ -39,6 +36,9 @@ public class FileController {
     @ResponseBody
     public String fileupload(String base64, HttpServletRequest request) throws IOException {
         MultipartFile pic = BASE64DecodedMultipartFile.base64ToMultipart(base64);
+        if (pic == null){
+            return "文件为空";
+        }
         return alfService.fileupload(pic,request);
     }
 

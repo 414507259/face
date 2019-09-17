@@ -88,6 +88,17 @@ AS re
     order by timestamp desc
   </select>
 
+  <select id="getTodayCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
+    select count(*) from record 
+    <where>
+        timestamp between #{beginTime} and #{endTime}
+        <if test="type != null">
+            and type = #{type}
+        </if>
+    </where>
+  </select>
+
+
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     <!--
