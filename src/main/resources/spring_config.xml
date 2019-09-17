@@ -240,9 +240,18 @@ http://www.springframework.org/schema/context/spring-context.xsd http://www.spri
         <property name="authorizationCacheName" value="authorizationCache"/>
     </bean>
 
+    <!-- 指定本系统SESSIONID, 默认为: JSESSIONID 问题: 与SERVLET容器名冲突, 如JETTY, TOMCAT 等默认JSESSIONID,
+        当跳出SHIRO SERVLET时如ERROR-PAGE容器会为JSESSIONID重新分配值导致登录会话丢失! -->
+    <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg name="name" value="jeesite.session.id"/>
+    </bean>
+
     <!--通过session会话来管理缓存,开启sessionIdCookieEnabled-->
     <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <!-- 这一句是关键-->
+        <property name="sessionIdCookie" ref="sessionIdCookie"/>
         <property name="sessionIdCookieEnabled" value="true"/>
+
     </bean>
 
     <!--缓存管理器-->

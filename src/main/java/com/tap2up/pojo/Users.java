@@ -1,8 +1,12 @@
 package com.tap2up.pojo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Users {
+public class Users implements Serializable {
+
+    private static final long serialVersionUID = 4122883130178003074L;
+
     private Integer userid;
 
     private String username;
