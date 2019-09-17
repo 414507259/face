@@ -47,12 +47,15 @@
   <select id="findUserInfoDetailById" parameterType="java.lang.Integer" resultType="java.util.Map">
     select alf._id, alf.icNumber,alf.idNumber,alf.type,alf.userName,alf.birthDay,alf.prompt, alf.userValidStartTime, alf.userValidEndTime,
     info.infoId, info.gender,info.tel,info.workNumber,info.email,info.workingPlace,info.age,info.hireDate,info.description,
-    g.groupName, g._id as groupId
+    g.groupName, g._id as groupId,
+    image.mid, image.path
     from alfuserlibrary alf
     left join userInfo info
     on alf._id = info._id
     left join _group g
     on alf.groupId = g._id
+    left join image
+    on alf.avatarId = image.mid
     where info.isDelete = 0
     <if test="type != null and type != 0">
       and alf.type = #{type,jdbcType=INTEGER}

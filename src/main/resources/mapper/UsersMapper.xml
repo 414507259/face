@@ -30,12 +30,15 @@
   <select id="selectAlfAndInfoByUid" parameterType="java.lang.Integer" resultType="java.util.Map">
     select u.userId, u.username, u.logintime, u.endtime, u.auth,
     alf._id, alf.idNumber, alf.userName as realName, alf.birthDay, alf.groupName,
-    info.infoId, info.gender, info.tel, info.age, info.email
-    from users u
-    left join alfuserlibrary alf
+    info.infoId, info.gender, info.tel, info.age, info.email,
+    image.mid, image.path
+    from alfuserlibrary alf
+    left join users u
     on u._id = alf._id
     left join userInfo info
-    on u._id = info._id
+    on alf._id = info._id
+    left join image
+    on alf.avatarId = image.mid
     where u.isDelete = 0
     <if test="userId != null and userId != ''">
       and u.userId = #{userId,jdbcType=INTEGER}
