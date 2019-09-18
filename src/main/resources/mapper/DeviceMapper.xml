@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tap2up.mapper.DeviceMapper">
+  <resultMap id="BaseResultMap" type="com.tap2up.pojo.Device">
+    <id column="deviceid" jdbcType="INTEGER" property="deviceid" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="deviceSn" jdbcType="VARCHAR" property="devicesn" />
+    <result column="timestamp" jdbcType="BIGINT" property="timestamp" />
+    <result column="passWord" jdbcType="VARCHAR" property="password" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="ctime" jdbcType="BIGINT" property="ctime" />
+    <result column="isdelete" jdbcType="INTEGER" property="isdelete" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    deviceid, account, deviceSn, timestamp, passWord, token, ctime, isdelete
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from device
+    where deviceid = #{deviceid,jdbcType=INTEGER}
+  </select>
+  <select id="selectPreview" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from device dev
+    where dev.isdelete = 0
+    <if test="deviceSn != null">
+      and deviceSn = #{deviceSn,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="selectDetailById" parameterType="java.lang.Integer" resultType="java.util.Map">
+    select
+      dev.deviceid, dev.account, dev.deviceSn, dev.`passWord`, dev.ctime,
+      c.configid, c.deviceName, c.oneOne, c.oneN, c.livenessSwitch, c.runMode, c.flashMode,
+      c.standyInterval, c.openDoor, c.relayAddr, c.thirdUpload, c.weigand, c.openInterval,
+      c.thirdComparisonMode, c.thirdTime, c.thirdAddress, c.uploadUserInfoFlag,
+      c.faceBitmapFlag, c.handoverSwitch, c.switchLightDistance, c.devAddress, c.devProt,
+      c.autoReboot, c.rebootInterval, c.rebootTime, c.upAvatar, c.upBgFlag, c.updateTime,
+      c.`inOut`, c.requestInterval, c.adminPassWord, c.readCarInterval, c.faceValidDistance
+    from device dev
+    left join config c
+    on dev.deviceSn = c.deviceSn
+    where dev.deviceid = #{id,jdbcType=INTEGER}
+      and dev.isdelete = 0
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from device
+    where deviceid = #{deviceid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tap2up.pojo.Device">
+    insert into device (deviceid, account, deviceSn, 
+      timestamp, passWord, token, 
+      ctime, isdelete)
+    values (#{deviceid,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR}, #{devicesn,jdbcType=VARCHAR}, 
+      #{timestamp,jdbcType=BIGINT}, #{password,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR}, 
+      #{ctime,jdbcType=BIGINT}, #{isdelete,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tap2up.pojo.Device">
+    insert into device
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deviceid != null">
+        deviceid,
+      </if>
+      <if test="account != null">
+        account,
+      </if>
+      <if test="devicesn != null">
+        deviceSn,
+      </if>
+      <if test="timestamp != null">
+        timestamp,
+      </if>
+      <if test="password != null">
+        passWord,
+      </if>
+      <if test="token != null">
+        token,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+      <if test="isdelete != null">
+        isdelete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deviceid != null">
+        #{deviceid,jdbcType=INTEGER},
+      </if>
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="devicesn != null">
+        #{devicesn,jdbcType=VARCHAR},
+      </if>
+      <if test="timestamp != null">
+        #{timestamp,jdbcType=BIGINT},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=BIGINT},
+      </if>
+      <if test="isdelete != null">
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tap2up.pojo.Device">
+    update device
+    <set>
+      <if test="account != null">
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="devicesn != null">
+        deviceSn = #{devicesn,jdbcType=VARCHAR},
+      </if>
+      <if test="timestamp != null">
+        timestamp = #{timestamp,jdbcType=BIGINT},
+      </if>
+      <if test="password != null">
+        passWord = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=BIGINT},
+      </if>
+      <if test="isdelete != null">
+        isdelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+    </set>
+    where deviceid = #{deviceid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tap2up.pojo.Device">
+    update device
+    set account = #{account,jdbcType=VARCHAR},
+      deviceSn = #{devicesn,jdbcType=VARCHAR},
+      timestamp = #{timestamp,jdbcType=BIGINT},
+      passWord = #{password,jdbcType=VARCHAR},
+      token = #{token,jdbcType=VARCHAR},
+      ctime = #{ctime,jdbcType=BIGINT},
+      isdelete = #{isdelete,jdbcType=INTEGER}
+    where deviceid = #{deviceid,jdbcType=INTEGER}
+  </update>
+</mapper>
