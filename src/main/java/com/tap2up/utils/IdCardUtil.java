@@ -7,14 +7,14 @@ import java.util.Map;
 /**
  * @Author: Han
  * @Date: 2019/9/10 10:38
- * @Description:
+ * @Description: 身份证工具类
  */
 public class IdCardUtil {
 
 
     /**
      * 通过身份证号码获取出生日期、性别、年龄
-     * @param certificateNo
+     * @param certificateNo 身份证号
      * @return 返回的出生日期格式：1990-01-01   性别格式：F-女，M-男
      */
     public static Map<String, String> getBirAgeSex(String certificateNo) {
@@ -37,7 +37,7 @@ public class IdCardUtil {
             }
         }
         if (flag && certificateNo.length() == 15) {
-            birthday = "19" + certificateNo.substring(6, 8) + "-"
+            birthday = certificateNo.substring(4, 8) + "-"
                     + certificateNo.substring(8, 10) + "-"
                     + certificateNo.substring(10, 12);
             sexCode = Integer.parseInt(certificateNo.substring(certificateNo.length() - 3, certificateNo.length())) % 2 == 0 ? "F" : "M";

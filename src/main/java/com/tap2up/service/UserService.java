@@ -88,6 +88,21 @@ public class UserService {
     }
 
     public List<Map> findAlfAndInfoByUid(Integer userId) {
-        return usersMapper.selectAlfAndInfoByUid(userId);
+        List<Map> maps = usersMapper.selectAlfAndInfoByUid(userId);
+        for (Map map: maps) {
+            if(map.get("isDelete").equals(1)){
+                map.remove("_id");
+                map.remove("idNumber");
+                map.remove("realName");
+                map.remove("birthDay");
+                map.remove("groupName");
+                map.remove("infoId");
+                map.remove("gender");
+                map.remove("email");
+                map.remove("mid");
+                map.remove("path");
+            }
+        }
+        return maps;
     }
 }
