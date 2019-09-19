@@ -73,14 +73,15 @@ public class EncryptUtils {
          */
         String cKey = "fbe47880b9171706";
         // 需要加密的字串
-        String cSrc = "www.gowhere.so";
+        String cSrc = "{\"account\":\"3309\", \"deviceSn\":\"1028006153360776\", \"passWord\":\"121314\", \"timestamp\":1557817725858}";
         System.out.println(cSrc);
         // 加密
-        String enString = "iJaj7l7GoNK5T6m0eaEDPb650e3EOpz2MP6GTY9x+pAnS1GlujvR236baog/TCYT gprYfPvwxmsudmN9QfFKuuSllXBCajvG2crlT8gX5wFNKIOfL8ZHqSwhTgr2c9kIrXdB8N7 FAvhdw9hMs2yV1hF6bVhvZc+4MSAa/Hvw7lxRGY5m7SK/EPpUwuitYpPH";
+        String enString = EncryptUtils.Encrypt(cSrc,cKey);
         System.out.println("加密后的字串是：" + enString);
 
         // 解密
-        String DeString = EncryptUtils.Decrypt(enString, cKey);
+        String str = "MNtmGhTsvX1SOKYKBGvIWcfpBeAdU5AnOAVU8tmd1jebPg3hUYSKBPJd+biXalTngnDAVWfGQOOFRjTVWwT4SUG0LzfVUoE1yrwy55Q6zHLBg8fHSthMSRYbyE3sE/pFSkRADVBpxexxr9UcHWCLYg==";
+        String DeString = EncryptUtils.Decrypt(str, cKey);
         System.out.println("解密后的字串是：" + DeString);
     }
 }

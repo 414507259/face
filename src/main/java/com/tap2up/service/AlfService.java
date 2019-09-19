@@ -99,4 +99,8 @@ public class AlfService {
         Map map = configMapper.getConfig(deviceSn);
         return map;
     }
+
+    public int login(String account,String password){
+        return mapper.login(account,password);
+    }
 }

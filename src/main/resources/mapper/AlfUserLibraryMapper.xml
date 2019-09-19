@@ -43,6 +43,10 @@
     token, sign
   </sql>
 
+  <select id="login" parameterType="java.lang.String">
+    select count(*) from device where account = #{arg0} and passWord = #{arg1}
+  </select>
+
   <select id="getAlfUserLibrarybyUserId" parameterType="java.lang.Integer" resultType="com.tap2up.pojo.AlfUserLibrary">
     select
     <include refid="Base_Column_List" />

@@ -31,6 +31,7 @@ public class HttpServletFilter implements Filter {
         Map<String, String[]> m = new HashMap<String, String[]>(request.getParameterMap());
         String data = request.getParameter("data");
         String key = request.getParameter("key");
+        System.out.println(data+key);
         String str = null;
         try {
             str = EncryptUtils.Decrypt(data,key);

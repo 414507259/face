@@ -5,9 +5,7 @@ import com.tap2up.pojo.AlfUserLibrary;
 
 public interface AlfUserLibraryMapper {
 
-
-
-
+    int login(String account,String password);
 
      AlfUserLibrary getAlfUserLibrarybyUserId(Integer userId);
 

@@ -1,8 +1,11 @@
 package com.tap2up.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.tap2up.pojo.AlfUserLibrary;
 import com.tap2up.service.AlfService;
 import com.tap2up.utils.AlfModel;
+import com.tap2up.utils.EncryptUtils;
+import com.tap2up.utils.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,17 +31,40 @@ import java.util.Map;
 public class AlfController {
 
     private final AlfService alfService;
+    private String aes;
 
     @Autowired
     public AlfController(AlfService alfService) {
         this.alfService = alfService;
     }
 
+    /**
+     * 用于设备登录
+     * @param account
+     * @param password
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "login")
     public String login(String account,String password) throws Exception {
-        System.out.println(account);
-        System.out.println(password);
-        return null;
+        if (account == null || password == null){
+            AlfModel alfModel = new AlfModel("-1","Parameter is not null");
+            JSON json = (JSON) JSON.toJSON(alfModel);
+            return EncryptUtils.Encrypt(json.toString(),password);
+        }
+        int a = alfService.login(account,password);
+        if (a > 0){
+            Map map = new HashMap();
+            map.put("key",aes);
+            map.put("token", FileUtil.getUUID());
+            map.put("AESPassWord",aes);
+            AlfModel alfModel = new AlfModel("0","ok");
+            JSON json = (JSON) JSON.toJSON(alfModel);
+            return EncryptUtils.Encrypt(json.toString(),password);
+        }else {
+            return null;
+        }
+
     }
 
 
