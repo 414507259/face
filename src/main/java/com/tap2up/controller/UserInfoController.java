@@ -16,10 +16,15 @@ import java.util.Map;
 public class UserInfoController {
 
 
+    private final UserInfoService userInfoService;
+
+    private  final AlfService alfService;
+
     @Autowired
-    private UserInfoService userInfoService;
-    @Autowired
-    private AlfService alfService;
+    public UserInfoController(UserInfoService userInfoService, AlfService alfService){
+        this.userInfoService = userInfoService;
+        this.alfService = alfService;
+    }
 
     /**
      * 添加用户信息
@@ -115,6 +120,13 @@ public class UserInfoController {
      */
     @RequestMapping("/updateEmployee")
     public String updateEmployee(AlfUserLibrary alfUserLibrary, UserInfo userInfo){
+        //从身份证号码中解析出生日和年龄
+        String idNumber = alfUserLibrary.getIdnumber();
+        if(idNumber != null && idNumber.length() >= 15){
+            Map<String, String> idInfo = IdCardUtil.getBirAgeSex(idNumber);
+            alfUserLibrary.setBirthday(idInfo.get("birthday"));
+            userInfo.setAge(Integer.parseInt(idInfo.get("age")));
+        }
         //通过用户组名获取用户组id
         String groupName = alfUserLibrary.getGroupname();
         Integer groupId = userInfoService.findGroupIdByGroupName(groupName);
