@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -102,5 +103,12 @@ public class AlfService {
 
     public int login(String account,String password){
         return mapper.login(account,password);
+    }
+    public List<Map> group(){
+        return mapper.group();
+    }
+
+    public List<Map> groupInfo(Integer groupId){
+        return mapper.groupInfo(groupId);
     }
 }

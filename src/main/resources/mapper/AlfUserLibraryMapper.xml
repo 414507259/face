@@ -43,7 +43,16 @@
     token, sign
   </sql>
 
-  <select id="login" parameterType="java.lang.String">
+  <select id="groupInfo" parameterType="java.lang.Integer" resultType="java.util.Map">
+    select userId,createAt,userUpdatedAt,groupId from alfuserlibrary where groupId = #{arg0}
+  </select>
+
+  <select id="group" resultType="java.util.Map">
+    select _id as groupId, groupName, ctime as createdAt, updateTime as updatedAt
+    from group
+  </select>
+
+  <select id="login" parameterType="java.lang.String" resultType="java.lang.Integer">
     select count(*) from device where account = #{arg0} and passWord = #{arg1}
   </select>
 

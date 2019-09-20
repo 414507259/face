@@ -133,10 +133,7 @@ public class UserInfoController {
         alfUserLibrary.setGroupid(groupId);
         int n0 = alfService.updateAlf(alfUserLibrary);
         int n1 = userInfoService.updateUserInfo(userInfo);
-        if(n0 < 1){
-            return "失败";
-        }
-        if(n1 < 1){
+        if(n0 < 1 && n1 < 1){
             return "失败";
         }
         return "成功";

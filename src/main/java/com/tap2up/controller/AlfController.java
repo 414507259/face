@@ -31,7 +31,8 @@ import java.util.Map;
 public class AlfController {
 
     private final AlfService alfService;
-    private String aes;
+    public static String aes = "1234563216545555";
+    private volatile AlfModel alfModel = new AlfModel();
 
     @Autowired
     public AlfController(AlfService alfService) {
@@ -46,21 +47,21 @@ public class AlfController {
      * @throws Exception
      */
     @RequestMapping(value = "login")
-    public String login(String account,String password) throws Exception {
+    public Map<String,String> login(String account,String password){
         if (account == null || password == null){
-            AlfModel alfModel = new AlfModel("-1","Parameter is not null");
-            JSON json = (JSON) JSON.toJSON(alfModel);
-            return EncryptUtils.Encrypt(json.toString(),password);
+            try {
+                return alfModel.Encrypt("-1","Parameter is not null");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         int a = alfService.login(account,password);
         if (a > 0){
-            Map map = new HashMap();
+            Map<String,String> map = new HashMap<>();
             map.put("key",aes);
             map.put("token", FileUtil.getUUID());
             map.put("AESPassWord",aes);
-            AlfModel alfModel = new AlfModel("0","ok");
-            JSON json = (JSON) JSON.toJSON(alfModel);
-            return EncryptUtils.Encrypt(json.toString(),password);
+            return alfModel.Encrypt2("0","ok",map);
         }else {
             return null;
         }
@@ -103,19 +104,89 @@ public class AlfController {
 
 
     @RequestMapping(value = "image/uploading")
-    public AlfModel fileupload(MultipartFile pic, HttpServletRequest request) throws IOException {
+    public Map fileupload(MultipartFile pic, HttpServletRequest request) throws IOException {
         if (pic == null){
-            return new AlfModel("-1","图片为空");
+            return alfModel.Encrypt("-1","Parameter is not null");
         }
         String str = alfService.fileupload(pic,request);
         if ("图片格式不正确".equals(str)){
-            return new AlfModel("-1","图片格式不正确");
+            return alfModel.Encrypt("-1","格式不正确");
         }
-        return new AlfModel("0","ok");
+        return alfModel.Encrypt("0","ok");
     }
 
+    /**
+     * 获取配置信息
+     * @param deviceSn 设备sn
+     * @param timestamp 时间戳
+     * @param token
+     * @param sign
+     * @return
+     */
     @RequestMapping(value = "config")
-    public Map config(String deviceSn, String timestamp, String token, String sign){
-        return alfService.config(deviceSn);
+    public Map config(String deviceSn, Long timestamp, String token, String sign){
+        if (deviceSn == null){
+            return alfModel.Encrypt("-1","Parameter is not null");
+        }
+        Map map = alfService.config(deviceSn);
+        return alfModel.Encrypt2("0","ok",map);
+    }
+
+    /**
+     * 获取配置更新时间
+     * @param deviceSn
+     * @param timestamp
+     * @param token
+     * @param sign
+     * @return
+     */
+    @RequestMapping(value = "serverConfig/time")
+    public Map serverConfig(String deviceSn, String timestamp, String token, String sign){
+        if (deviceSn == null){
+            return alfModel.Encrypt("-1","Parameter is not null");
+        }
+        Map<String,Long> map = new HashMap<>();
+        map.put("configUpTime",1557884520000L);
+        map.put("groupUpTime",1557884520000L);
+        map.put("companyUpTime",1557884520000L);
+        return alfModel.Encrypt2("0","ok",map);
+    }
+
+    /**
+     * 获取用户组列表
+     * @param deviceSn
+     * @param timestamp
+     * @param token
+     * @param sign
+     * @return
+     */
+    @RequestMapping(value = "group")
+    public Map group(String deviceSn, Long timestamp, String token, String sign){
+        AlfModel alfModel = new AlfModel();
+        if (deviceSn == null){
+            return alfModel.Encrypt("-1","Parameter is not null");
+        }
+        List<Map> list = alfService.group();
+        for (Map p:list) {
+            p.put("deviceSn",deviceSn);
+        }
+        return alfModel.Encrypt2("0","ok",list);
+    }
+
+    /**
+     * 根据组id获取成员
+     * @param groupId
+     * @param timestamp
+     * @param token
+     * @param sign
+     * @return
+     */
+    @RequestMapping(value = "group/info")
+    public Map groupInfo(Integer groupId, Long timestamp, String token, String sign){
+        if (groupId == null){
+            return alfModel.Encrypt("-1","Parameter is not null");
+        }
+        List list = alfService.groupInfo(groupId);
+        return alfModel.Encrypt2("0","ok",list);
     }
 }
